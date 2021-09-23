@@ -7,11 +7,13 @@ interface CellProps {
   columnIndex: number;
   columnName: string;
   // type check
-  setCellValue: any;
+  setCellValue: (...args: any) => void;
   // type check
-  computeCell: any;
+  computeCell: (...args: any) => void;
   currentValue: number;
 }
+
+type CallbackType = (...args: any) => void
 
 const Cell: React.FC<CellProps> = ({
   rowIndex,
@@ -23,15 +25,15 @@ const Cell: React.FC<CellProps> = ({
 }) => {
   const [edit, setEdit] = useState<boolean>(false);
 
-  const value = useMemo(() => {
+  const value = React.useMemo<any>(() => {
     if (edit) {
       return currentValue || "";
     }
     return computeCell({ row: rowIndex, column: columnName });
   }, [edit, currentValue, rowIndex, columnName, computeCell]);
 
-  const handleChange = useCallback(
-    event => {
+  const handleChange = React.useCallback<CallbackType>(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
       setCellValue({
         row: rowIndex,
         column: columnName,

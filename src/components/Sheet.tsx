@@ -3,7 +3,7 @@ import React, { useState, useCallback, Fragment } from "react";
 import Cell from "./Cell";
 import { Sheet as StyledSheet } from "../styles";
 
-const getColumnName = (index: number) =>
+const getColumnName: (index: number) => string = (index) =>
   String.fromCharCode("A".charCodeAt(0) + index - 1);
 
 interface SheetProps {
@@ -17,28 +17,33 @@ type CellValueType = {
   value?: number;
 }
 
+type DataType = {
+  [key:string]: number | any;
+}
+
+type CallbackType = (...args: any) => void
+
 const Sheet: React.FC<SheetProps> = ({ numberOfRows, numberOfColumns }) => {
-  const [data, setData] = useState<any>({});
+  const [data, setData] = useState<DataType>({});
 
-  const setCellValue = useCallback(
+  const setCellValue = React.useCallback<CallbackType>(
     ({ row, column, value }: CellValueType) => {
-      const newData: any = { ...data };
-
+      const newData: DataType = { ...data };
       newData[`${column}${row}`] = value;
       setData(newData);
     },
     [data, setData]
   );
 
-  const computeCell = useCallback(
+  const computeCell = React.useCallback<CallbackType>(
     ({ row, column }: CellValueType) => {
-      const cellContent: any = data[`${column}${row}`];
+      const cellContent: string | undefined = data[`${column}${row}`];
       if (cellContent) {
         if (cellContent.charAt(0) === "=") {
           // This regex converts = "A1+A2" to ["A1","+","A2"]
-          const expression = cellContent.substr(1).split(/([+*-])/g);
+          const expression: Array<string> = cellContent.substr(1).split(/([+*-])/g);
 
-          let subStitutedExpression = "";
+          let subStitutedExpression: string = "";
 
           expression.forEach((item:any) => {
             // Regex to test if it is of form alphabet followed by number ex: A1
@@ -67,12 +72,12 @@ const Sheet: React.FC<SheetProps> = ({ numberOfRows, numberOfColumns }) => {
     <StyledSheet numberOfColumns={numberOfColumns}>
       {Array(numberOfRows)
         .fill(0)
-        .map((m, i) => {
+        .map((_, i: number) => {
           return (
             <Fragment key={i}>
               {Array(numberOfColumns)
                 .fill(0)
-                .map((n, j) => {
+                .map((_, j: number) => {
                   const columnName: string = getColumnName(j);
                   return (
                     <Cell
