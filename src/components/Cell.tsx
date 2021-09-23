@@ -1,5 +1,4 @@
-import React, { useCallback, useState, memo, useMemo } from "react";
-
+import React, { useState, memo } from "react";
 import { Input, Header } from "../styles";
 
 interface CellProps {

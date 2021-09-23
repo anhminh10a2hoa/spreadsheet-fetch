@@ -1,4 +1,4 @@
-import React, { useState, useCallback, Fragment } from "react";
+import React, { useState, Fragment } from "react";
 
 import Cell from "./Cell";
 import { Sheet as StyledSheet } from "../styles";
