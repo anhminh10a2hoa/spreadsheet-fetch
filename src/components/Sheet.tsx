@@ -49,12 +49,13 @@ const Sheet: React.FC<SheetProps> = ({ numberOfRows, numberOfColumns }) => {
                 fetchData[`${getColumnName(column.charCodeAt(0) - columnI)}${rowI}`] = element[prop].value
                 i++;
               }
-              setData(fetchData);
             }
+            setData(fetchData);
           }
         })
       } else {
         const newData: DataType = { ...data };
+        console.log(value)
         newData[`${column}${row}`] = value;
         setData(newData);
       }
