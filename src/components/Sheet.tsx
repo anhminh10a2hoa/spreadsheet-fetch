@@ -3,9 +3,18 @@ import React, { useState, Fragment } from "react";
 import Cell from "./Cell";
 import { Sheet as StyledSheet } from "../styles";
 
-const getColumnName: (index: number) => string = (index) =>
-  String.fromCharCode("A".charCodeAt(0) + index - 1);
+const getColumnName: (index: number) => string = (index) => {
+  let subIndex: string = ''
+  let i: number = index
+  if(index > 26) {
+    i = index - 26;
+    subIndex = Math.floor(index / 26).toString();
+  }
+  return String.fromCharCode("A".charCodeAt(0) + i - 1) + subIndex;
+}
+  
 
+  
 interface SheetProps {
   numberOfRows: number;
   numberOfColumns: number;
