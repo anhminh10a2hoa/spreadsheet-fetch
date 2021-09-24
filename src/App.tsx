@@ -6,7 +6,7 @@ import { AppContainer } from "./styles";
 
 
 const App: React.FC = () => {
-  const [numberOfRows, setNumberOfRows] = useState<number>(101)
+  const [numberOfRows, setNumberOfRows] = useState<number>(150)
   const [numberOfColumns, setNumberOfColumns] = useState<number>(27)
   const [tempRow, setTempRow] = useState<number>(numberOfRows)
   const [tempColumn, setTempColumn] = useState<number>(numberOfColumns)
@@ -26,7 +26,7 @@ const App: React.FC = () => {
   const submitChange = (event: any):void => {
     event.preventDefault();
     if(tempRow < 2 || tempColumn < 2) {
-      alert('Column and Row must be greater than 1')
+      alert('Column and Row must be greater than 2')
     } else {
       setNumberOfRows(tempRow)
       setNumberOfColumns(tempColumn)

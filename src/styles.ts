@@ -32,8 +32,8 @@ export const Input = styled.input`
 
 export const AppContainer = styled.div`
   border: 2px solid;
-  max-height: calc(100vh - 80px);
-  max-width: calc(100vw - 30px);
+  max-height: calc(90vh);
+  max-width: calc(80vw);
   resize: both;
   overflow: auto;
 `
