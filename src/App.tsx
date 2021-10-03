@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './App.css';
 import { Reset } from 'styled-reset';
 import Sheet from './components/Sheet';
-import { AppContainer, Button, Wrapper, InputWrapper, NumberInput, Label, Title } from "./styles";
+import { AppContainer, Button, InputWrapper, NumberInput, Label, Title } from "./styles";
 
 
 const App: React.FC = () => {
@@ -42,14 +42,13 @@ const App: React.FC = () => {
       </Label>
       <NumberInput placeholder="Rows" type="number" value={tempRow} onChange={handleChangeNumberOfRows} />
       
-      <br />
       <Label>
         Number of columns:
       </Label>
         <NumberInput placeholder="Columns" type="number" value={tempColumn} onChange={handleChangeNumberOfColumns} />
-      <Wrapper>
+     
       <Button type="button" onClick={submitChange}>Change</Button>
-      </Wrapper>
+     
       </InputWrapper>
       <AppContainer>
         <Reset />

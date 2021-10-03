@@ -5,6 +5,7 @@ interface SheetProps {
 }
 
 export const Sheet = styled.div`
+  overflow: auto;
   display: grid;
   grid-template-columns: 32px repeat(
       ${(props: SheetProps) => props.numberOfColumns - 1},
@@ -27,12 +28,17 @@ export const Button = styled.button`
 	display:inline-block;
 	cursor:pointer;
 	color:#ffffff;
-	font-size:13px;
+	font-size:15px;
 	font-weight:600;
 	padding:6px 24px;
 	text-decoration:none;
 	text-shadow:0px 1px 0px #528009;
   margin: 10px;
+
+  &:hover {
+  background:linear-gradient(to bottom, #2c6111 5%, #74ad5a 100%);
+	background-color:#2c6111;
+  }
 `;
 
 export const Title = styled.h1`
@@ -41,14 +47,9 @@ export const Title = styled.h1`
   background: #2c6111;
   color: white;
   font-size: 30px;
+  
 `;
 
-export const Wrapper = styled.div`
-   &:hover ${Button} {
-  background:linear-gradient(to bottom, #2c6111 5%, #74ad5a 100%);
-	background-color:#2c6111;
-  }
-`;
 
 
 export const InputWrapper = styled.div`
@@ -57,10 +58,9 @@ export const InputWrapper = styled.div`
 `;
 
 export const NumberInput = styled.input`
-  margin-left: 5px;
   padding:5px;
   border-radius: 30px;
-  margin-bottom: 10px;
+  margin: 10px
 `;
 
 export const Header = styled.div`
@@ -71,6 +71,8 @@ export const Header = styled.div`
 `;
 
 export const Input = styled.input`
+   resize: both;
+  overflow: auto;
   padding: 0 4px;
   :not(:focus) {
     text-align: right;
@@ -88,4 +90,5 @@ export const AppContainer = styled.div`
   resize: both;
   margin: auto;
   overflow: auto;
+  margin-bottom: 20px;
 `
