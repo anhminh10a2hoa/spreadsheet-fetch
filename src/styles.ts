@@ -12,6 +12,12 @@ export const Sheet = styled.div`
     );
 `;
 
+export const Label = styled.label`
+  font-size: 18px;
+  font-weight: 500;
+`;
+
+
 export const Button = styled.button`
   box-shadow:inset 0px 1px 0px 0px #a4e271;
 	background:linear-gradient(to bottom, #74ad5a 5%, #2c6111 100%);
@@ -21,12 +27,20 @@ export const Button = styled.button`
 	display:inline-block;
 	cursor:pointer;
 	color:#ffffff;
-	font-size:15px;
-	font-weight:bold;
+	font-size:13px;
+	font-weight:600;
 	padding:6px 24px;
 	text-decoration:none;
 	text-shadow:0px 1px 0px #528009;
   margin: 10px;
+`;
+
+export const Title = styled.h1`
+  padding: 30px;
+  text-align: center;
+  background: #2c6111;
+  color: white;
+  font-size: 30px;
 `;
 
 export const Wrapper = styled.div`
@@ -45,7 +59,7 @@ export const InputWrapper = styled.div`
 export const NumberInput = styled.input`
   margin-left: 5px;
   padding:5px;
-  border-radius:30px;
+  border-radius: 30px;
   margin-bottom: 10px;
 `;
 

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './App.css';
 import { Reset } from 'styled-reset';
 import Sheet from './components/Sheet';
-import { AppContainer, Button, Wrapper, InputWrapper, NumberInput } from "./styles";
+import { AppContainer, Button, Wrapper, InputWrapper, NumberInput, Label, Title } from "./styles";
 
 
 const App: React.FC = () => {
@@ -34,17 +34,18 @@ const App: React.FC = () => {
   }
 
   return (
-    <>
+    <> 
+      <Title>Fetch Sheet</Title>
       <InputWrapper>
-      <label>
+      <Label>
         Number of rows:
-      </label>
+      </Label>
       <NumberInput placeholder="Rows" type="number" value={tempRow} onChange={handleChangeNumberOfRows} />
       
       <br />
-      <label>
+      <Label>
         Number of columns:
-      </label>
+      </Label>
         <NumberInput placeholder="Columns" type="number" value={tempColumn} onChange={handleChangeNumberOfColumns} />
       <Wrapper>
       <Button type="button" onClick={submitChange}>Change</Button>
