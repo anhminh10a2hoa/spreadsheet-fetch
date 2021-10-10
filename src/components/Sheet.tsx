@@ -8,6 +8,7 @@ interface SheetProps {
   numberOfRows: number;
   numberOfColumns: number;
   getData: any;
+  resetData: number;
   simpleRowAndColumn: SimpleRowAndColumn
 }
 
@@ -30,7 +31,7 @@ type SimpleRowAndColumn = DataType
 
 type CallbackType = (...args: any) => void
 
-const Sheet: React.FC<SheetProps> = ({ numberOfRows, numberOfColumns, getData, simpleRowAndColumn }) => {
+const Sheet: React.FC<SheetProps> = ({ numberOfRows, numberOfColumns, getData, simpleRowAndColumn, resetData }) => {
   const [data, setData] = useState<DataType>({});
 
   useEffect(() => {
@@ -38,6 +39,10 @@ const Sheet: React.FC<SheetProps> = ({ numberOfRows, numberOfColumns, getData, s
       getData.current = data
     }
   }, [data])
+
+  useEffect(() => {
+    setData({})
+  }, [resetData])
 
   useEffect(() => {
     const newData: DataType = {};

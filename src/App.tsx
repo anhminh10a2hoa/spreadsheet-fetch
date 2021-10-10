@@ -3,7 +3,7 @@ import './App.css';
 import { Reset } from 'styled-reset';
 import { AppContainer, Button, InputWrapper, NumberInput, Label, Title } from "./styles";
 
-import { getColumnName, getColumnIndex } from "./utils/helper";
+import { getColumnIndex } from "./utils/helper";
 import Sheet from './components/Sheet';
 
 type SimpleRowAndColumn = {
@@ -16,6 +16,7 @@ const App: React.FC = () => {
   const [tempRow, setTempRow] = useState<number>(numberOfRows)
   const [tempColumn, setTempColumn] = useState<number>(numberOfColumns)
   const [simpleRowAndColumn, setSimpleRowAndColumn] = useState<SimpleRowAndColumn>({})
+  const [resetData, setResetData] = useState<number>(0)
   const getData = React.useRef<any>(null)
 
   const handleChangeNumberOfRows = (event: React.ChangeEvent<HTMLInputElement>): void => {
@@ -44,10 +45,10 @@ const App: React.FC = () => {
     const firstKey = Object.keys(data)[0];
     const lastKey = Object.keys(data)[Object.keys(data).length - 1];
     if(firstKey) {
-      const firstRow = parseInt(firstKey.match(/^\d+|\d+\b|\d+(?=\w)/g)![0])
-      const firstColumn = firstKey.toString().substring(firstRow.toString().length, firstKey.length)
-      const lastRow = parseInt(lastKey.match(/^\d+|\d+\b|\d+(?=\w)/g)![0])
-      const lastColumn = lastKey.toString().substring(lastRow.toString().length, lastKey.length)
+      const firstRow: number = parseInt(firstKey.match(/^\d+|\d+\b|\d+(?=\w)/g)![0])
+      const firstColumn: string = firstKey.toString().substring(firstRow.toString().length, firstKey.length)
+      const lastRow: number = parseInt(lastKey.match(/^\d+|\d+\b|\d+(?=\w)/g)![0])
+      const lastColumn: string = lastKey.toString().substring(lastRow.toString().length, lastKey.length)
       setSimpleRowAndColumn({
         'startRow':firstRow,
         'startCol':getColumnIndex(firstColumn) - getColumnIndex('A')
@@ -64,7 +65,12 @@ const App: React.FC = () => {
   }
 
   const resetHandler = ():void => {
-    
+    const times: number = resetData + 1
+    setResetData(times)
+    setNumberOfRows(31)
+    setTempRow(30)
+    setNumberOfColumns(31)
+    setTempColumn(30)
   }
 
   return (
@@ -88,7 +94,7 @@ const App: React.FC = () => {
       </InputWrapper>
       <AppContainer>
         <Reset />
-        <Sheet numberOfRows={numberOfRows} numberOfColumns={numberOfColumns} getData={getData} simpleRowAndColumn={simpleRowAndColumn}/>
+        <Sheet numberOfRows={numberOfRows} numberOfColumns={numberOfColumns} getData={getData} resetData={resetData} simpleRowAndColumn={simpleRowAndColumn}/>
       </AppContainer>
     </>
   );
