@@ -1,21 +1,13 @@
-import React, { useState, Fragment } from "react";
-
-import Cell from "./Cell";
-import { Sheet as StyledSheet } from "../styles";
+import React, { useState, Fragment, useEffect } from "react";
 import axios from "axios";
+import { Sheet as StyledSheet } from "../styles";
 
-const getColumnName: (index: number) => string = (index) => {
-  let subIndex: string = ''
-  let i: number = index
-  if(index > 26) {
-    i = index % 26;
-    subIndex = Math.floor(index / 26).toString();
-  }
-  return String.fromCharCode("A".charCodeAt(0) + i - 1) + subIndex;
-}
+import { getColumnName } from "../utils/helper";
+import Cell from "./Cell";
 interface SheetProps {
   numberOfRows: number;
   numberOfColumns: number;
+  simpleHandlerFunc: any;
 }
 
 type CellValueType = {
@@ -24,14 +16,23 @@ type CellValueType = {
   value?: number | string;
 }
 
+type IRefReturn = {
+  row: number;
+  column: number;
+}
+
 type DataType = {
   [key:string]: number | any;
 }
 
 type CallbackType = (...args: any) => void
 
-const Sheet: React.FC<SheetProps> = ({ numberOfRows, numberOfColumns }) => {
+const Sheet: React.FC<SheetProps> = ({ numberOfRows, numberOfColumns, simpleHandlerFunc }) => {
   const [data, setData] = useState<DataType>({});
+
+  useEffect(() => {
+    simpleHandlerFunc.current = findStartingRowAndColumn
+  }, [])
 
   const setCellValue = React.useCallback<CallbackType>(
     ({ row, column, value }: CellValueType) => {
@@ -46,17 +47,17 @@ const Sheet: React.FC<SheetProps> = ({ numberOfRows, numberOfColumns }) => {
               for (const prop in element) {
                 const rowI: number = row + index
                 const columnI: number = 64 - i
-                fetchData[`${getColumnName(column.charCodeAt(0) - columnI)}${rowI}`] = element[prop].value
+                fetchData[`${rowI}${getColumnName(column.charCodeAt(0) - columnI)}`] = element[prop].value
                 i++;
               }
             }
+            
             setData(fetchData);
           }
         })
       } else {
         const newData: DataType = { ...data };
-        console.log(value)
-        newData[`${column}${row}`] = value;
+        newData[`${row}${column}`] = value;
         setData(newData);
       }
     },
@@ -65,7 +66,7 @@ const Sheet: React.FC<SheetProps> = ({ numberOfRows, numberOfColumns }) => {
 
   const computeCell = React.useCallback<CallbackType>(
     ({ row, column }: CellValueType) => {
-      const cellContent: string | undefined = data[`${column}${row}`];
+      const cellContent: string | undefined = data[`${row}${column}`];
       if (cellContent) {
         if (cellContent?.charAt(0) === "=") {
           // This regex converts = "A1+A2" to ["A1","+","A2"]
@@ -97,6 +98,11 @@ const Sheet: React.FC<SheetProps> = ({ numberOfRows, numberOfColumns }) => {
     [data]
   );
 
+  const findStartingRowAndColumn = (): IRefReturn => {
+    console.log(data)
+    return {row: 1, column: 1}
+  }
+
   return (
     <StyledSheet numberOfColumns={numberOfColumns}>
       {Array(numberOfRows)
@@ -114,7 +120,7 @@ const Sheet: React.FC<SheetProps> = ({ numberOfRows, numberOfColumns }) => {
                       columnIndex={j}
                       columnName={columnName}
                       setCellValue={setCellValue}
-                      currentValue={data[`${columnName}${i}`]}
+                      currentValue={data[`${i}${columnName}`]}
                       computeCell={computeCell}
                       key={`${columnName}${i}`}
                     />
