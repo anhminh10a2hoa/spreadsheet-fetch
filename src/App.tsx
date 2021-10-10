@@ -53,10 +53,12 @@ const App: React.FC = () => {
         'startCol':getColumnIndex(firstColumn) - getColumnIndex('A')
       })
       if(numberOfRows !== lastRow - firstRow && lastRow - firstRow > 2) {
-        setNumberOfRows(lastRow - firstRow)
+        setNumberOfRows(lastRow - firstRow + 1)
+        setTempRow(lastRow - firstRow)
       }
       if(numberOfColumns !== getColumnIndex(lastColumn) - getColumnIndex(firstColumn) + 2 && getColumnIndex(lastColumn) - getColumnIndex(firstColumn) + 2 > 2) {
         setNumberOfColumns(getColumnIndex(lastColumn) - getColumnIndex(firstColumn) + 2)
+        setTempColumn(getColumnIndex(lastColumn) - getColumnIndex(firstColumn) + 1)
       }
     }
   }
