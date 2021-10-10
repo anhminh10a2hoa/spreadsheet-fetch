@@ -3,15 +3,20 @@ import './App.css';
 import { Reset } from 'styled-reset';
 import { AppContainer, Button, InputWrapper, NumberInput, Label, Title } from "./styles";
 
-import { getColumnName } from "./utils/helper";
+import { getColumnName, getColumnIndex } from "./utils/helper";
 import Sheet from './components/Sheet';
+
+type SimpleRowAndColumn = {
+  [key:string]: number | string;
+}
 
 const App: React.FC = () => {
   const [numberOfRows, setNumberOfRows] = useState<number>(30)
   const [numberOfColumns, setNumberOfColumns] = useState<number>(30)
   const [tempRow, setTempRow] = useState<number>(numberOfRows)
   const [tempColumn, setTempColumn] = useState<number>(numberOfColumns)
-  const simpleHandlerFunc = React.useRef<any>(null)
+  const [simpleRowAndColumn, setSimpleRowAndColumn] = useState<SimpleRowAndColumn>({})
+  const getData = React.useRef<any>(null)
 
   const handleChangeNumberOfRows = (event: React.ChangeEvent<HTMLInputElement>): void => {
     event.preventDefault();
@@ -35,14 +40,29 @@ const App: React.FC = () => {
   }
 
   const simpleHandler = ():void => {
-    const {row, column} = simpleHandlerFunc.current()
-    console.log(row, column)
-    if(numberOfRows !== row && row > 2) {
-      setNumberOfRows(row)
+    const data = getData.current
+    const firstKey = Object.keys(data)[0];
+    const lastKey = Object.keys(data)[Object.keys(data).length - 1];
+    if(firstKey) {
+      const firstRow = parseInt(firstKey.match(/^\d+|\d+\b|\d+(?=\w)/g)![0])
+      const firstColumn = firstKey.toString().substring(firstRow.toString().length, firstKey.length)
+      const lastRow = parseInt(lastKey.match(/^\d+|\d+\b|\d+(?=\w)/g)![0])
+      const lastColumn = lastKey.toString().substring(lastRow.toString().length, lastKey.length)
+      setSimpleRowAndColumn({
+        'startRow':firstRow,
+        'startCol':getColumnIndex(firstColumn) - getColumnIndex('A')
+      })
+      if(numberOfRows !== lastRow - firstRow && lastRow - firstRow > 2) {
+        setNumberOfRows(lastRow - firstRow)
+      }
+      if(numberOfColumns !== getColumnIndex(lastColumn) - getColumnIndex(firstColumn) + 2 && getColumnIndex(lastColumn) - getColumnIndex(firstColumn) + 2 > 2) {
+        setNumberOfColumns(getColumnIndex(lastColumn) - getColumnIndex(firstColumn) + 2)
+      }
     }
-    if(numberOfColumns !== column && column > 2) {
-      setNumberOfColumns(column)
-    }
+  }
+
+  const resetHandler = ():void => {
+    
   }
 
   return (
@@ -61,11 +81,12 @@ const App: React.FC = () => {
      
       <Button type="button" onClick={submitChange}>Change</Button>
       <Button type="button" onClick={simpleHandler}>Simple</Button>
+      <Button type="button" onClick={resetHandler}>Reset</Button>
      
       </InputWrapper>
       <AppContainer>
         <Reset />
-        <Sheet numberOfRows={numberOfRows} numberOfColumns={numberOfColumns} simpleHandlerFunc={simpleHandlerFunc}/>
+        <Sheet numberOfRows={numberOfRows} numberOfColumns={numberOfColumns} getData={getData} simpleRowAndColumn={simpleRowAndColumn}/>
       </AppContainer>
     </>
   );

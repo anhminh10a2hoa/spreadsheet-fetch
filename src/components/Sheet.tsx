@@ -2,12 +2,13 @@ import React, { useState, Fragment, useEffect } from "react";
 import axios from "axios";
 import { Sheet as StyledSheet } from "../styles";
 
-import { getColumnName } from "../utils/helper";
+import { getColumnName, getColumnIndex } from "../utils/helper";
 import Cell from "./Cell";
 interface SheetProps {
   numberOfRows: number;
   numberOfColumns: number;
-  simpleHandlerFunc: any;
+  getData: any;
+  simpleRowAndColumn: SimpleRowAndColumn
 }
 
 type CellValueType = {
@@ -25,14 +26,28 @@ type DataType = {
   [key:string]: number | any;
 }
 
+type SimpleRowAndColumn = DataType
+
 type CallbackType = (...args: any) => void
 
-const Sheet: React.FC<SheetProps> = ({ numberOfRows, numberOfColumns, simpleHandlerFunc }) => {
+const Sheet: React.FC<SheetProps> = ({ numberOfRows, numberOfColumns, getData, simpleRowAndColumn }) => {
   const [data, setData] = useState<DataType>({});
 
   useEffect(() => {
-    simpleHandlerFunc.current = findStartingRowAndColumn
-  }, [])
+    if(data) {
+      getData.current = data
+    }
+  }, [data])
+
+  useEffect(() => {
+    const newData: DataType = {};
+    for (const item in data) {
+      const row = parseInt(item.match(/^\d+|\d+\b|\d+(?=\w)/g)![0])
+      const column = item.toString().substring(row.toString().length, item.length)
+      newData[`${row-simpleRowAndColumn['startRow']}${getColumnName(getColumnIndex(column)-simpleRowAndColumn['startCol'])}`] = data[item]
+    }
+    setData(newData)
+  }, [simpleRowAndColumn])
 
   const setCellValue = React.useCallback<CallbackType>(
     ({ row, column, value }: CellValueType) => {
@@ -51,7 +66,6 @@ const Sheet: React.FC<SheetProps> = ({ numberOfRows, numberOfColumns, simpleHand
                 i++;
               }
             }
-            
             setData(fetchData);
           }
         })
@@ -97,11 +111,6 @@ const Sheet: React.FC<SheetProps> = ({ numberOfRows, numberOfColumns, simpleHand
     },
     [data]
   );
-
-  const findStartingRowAndColumn = (): IRefReturn => {
-    console.log(data)
-    return {row: 1, column: 1}
-  }
 
   return (
     <StyledSheet numberOfColumns={numberOfColumns}>

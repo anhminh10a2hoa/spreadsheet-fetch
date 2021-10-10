@@ -8,6 +8,10 @@ export const getColumnName: (index: number) => string = (index) => {
   return String.fromCharCode("A".charCodeAt(0) + i - 1) + subIndex;
 }
 
-export const getColumnIndex: (character: string) => number = (character) => {
-  return character.charCodeAt(0)
+export const getColumnIndex: (character: string) => number = (character) => { 
+  let subIndex: number = 0
+  if(character.length > 1) {
+    subIndex = parseInt(character.substr(1, character.length - 1))
+  }
+  return character.charCodeAt(0) - 64 + subIndex * 26
 }
