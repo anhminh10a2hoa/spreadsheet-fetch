@@ -14,6 +14,7 @@ const App: FC = () => {
   const [tempColumn, setTempColumn] = useState<number>(numberOfColumns)
   const [simpleRowAndColumn, setSimpleRowAndColumn] = useState<DataFormatSave>({})
   const [resetData, setResetData] = useState<number>(0)
+  const [dataJson, setDataJson] = useState<DataFormatSave | null>(null)
   const getData = useRef<DataFormatSave>({})
 
   const handleChangeNumberOfRows = (event: InputEvent): void => {
@@ -97,6 +98,25 @@ const App: FC = () => {
     })
   }
 
+  const importJsonHandler = (e: any) => {
+    const fileReader = new FileReader();
+    if(e.target.files[0].type === 'application/json') {
+      fileReader.readAsText(e.target.files[0], "UTF-8");
+      fileReader.onload = e => {
+        if(e.target?.result) {
+          const dataObj = JSON.parse(e.target?.result as string)
+          setDataJson(dataObj)
+        }
+        else {
+          alert('Something went wrong with the file')
+        }
+      };
+    }
+    else {
+      alert('Please import JSON file')
+    }
+  };
+
   return (
     <> 
       <Title>Fetch Sheet</Title>
@@ -115,11 +135,12 @@ const App: FC = () => {
       <Button type="button" onClick={simpleHandler}>Simple</Button>
       <Button type="button" onClick={resetHandler}>Reset</Button>
       <Button type="button" onClick={exportJsonHandler}>Export JSON</Button>
+      <input type="file" onChange={importJsonHandler} />
      
       </InputWrapper>
       <AppContainer>
         <Reset />
-        <Sheet numberOfRows={numberOfRows} numberOfColumns={numberOfColumns} getData={getData} resetData={resetData} simpleRowAndColumn={simpleRowAndColumn}/>
+        <Sheet numberOfRows={numberOfRows} numberOfColumns={numberOfColumns} getData={getData} resetData={resetData} simpleRowAndColumn={simpleRowAndColumn} dataJson={dataJson}/>
       </AppContainer>
     </>
   );

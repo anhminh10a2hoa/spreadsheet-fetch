@@ -11,12 +11,13 @@ interface SheetProps {
   numberOfColumns: number;
   getData: any;
   resetData: number;
-  simpleRowAndColumn: DataFormatSave
+  simpleRowAndColumn: DataFormatSave;
+  dataJson: DataFormatSave | null;
 }
 
 type CallbackType = (...args: any) => void
 
-const Sheet: React.FC<SheetProps> = ({ numberOfRows, numberOfColumns, getData, simpleRowAndColumn, resetData }) => {
+const Sheet: React.FC<SheetProps> = ({ numberOfRows, numberOfColumns, getData, simpleRowAndColumn, resetData, dataJson }) => {
   const [data, setData] = useState<DataFormatSave>({});
 
   useEffect(() => {
@@ -28,6 +29,15 @@ const Sheet: React.FC<SheetProps> = ({ numberOfRows, numberOfColumns, getData, s
   useEffect(() => {
     setData({})
   }, [resetData])
+
+  useEffect(() => {
+    if(dataJson) {
+      if (window.confirm('Are you sure you want to import the data?')) {
+        // Save it!
+        setData(dataJson);
+      }
+    }
+  }, [dataJson])
 
   useEffect(() => {
     const newData: DataFormatSave = {};
