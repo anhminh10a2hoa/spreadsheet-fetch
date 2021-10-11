@@ -4,35 +4,20 @@ import { Sheet as StyledSheet } from "../styles";
 
 import { getColumnName, getColumnIndex } from "../utils/helper";
 import Cell from "./Cell";
+
+import { CellValueType, DataFormatSave } from "../types/types";
 interface SheetProps {
   numberOfRows: number;
   numberOfColumns: number;
   getData: any;
   resetData: number;
-  simpleRowAndColumn: SimpleRowAndColumn
+  simpleRowAndColumn: DataFormatSave
 }
-
-type CellValueType = {
-  row: number;
-  column: string;
-  value?: number | string;
-}
-
-type IRefReturn = {
-  row: number;
-  column: number;
-}
-
-type DataType = {
-  [key:string]: number | any;
-}
-
-type SimpleRowAndColumn = DataType
 
 type CallbackType = (...args: any) => void
 
 const Sheet: React.FC<SheetProps> = ({ numberOfRows, numberOfColumns, getData, simpleRowAndColumn, resetData }) => {
-  const [data, setData] = useState<DataType>({});
+  const [data, setData] = useState<DataFormatSave>({});
 
   useEffect(() => {
     if(data) {
@@ -45,7 +30,7 @@ const Sheet: React.FC<SheetProps> = ({ numberOfRows, numberOfColumns, getData, s
   }, [resetData])
 
   useEffect(() => {
-    const newData: DataType = {};
+    const newData: DataFormatSave = {};
     for (const item in data) {
       const row = parseInt(item.match(/^\d+|\d+\b|\d+(?=\w)/g)![0])
       const column = item.toString().substring(row.toString().length, item.length)
@@ -60,7 +45,7 @@ const Sheet: React.FC<SheetProps> = ({ numberOfRows, numberOfColumns, getData, s
         const query: Array<string> = value.split("fetch('")
         axios.get(`${process.env.REACT_APP_PROJECT_WARE_SPARQL}&query=${query[1].substr(0, query[1].length - 2)}`).then((res) => {
           if(Array.isArray(res.data.results.bindings)) {
-            const fetchData: DataType = { ...data };
+            const fetchData: DataFormatSave = { ...data };
             for (const [index, element] of res.data.results.bindings.entries()) {
               // fetchData[`${parseInt(columnStart)}${getColumnName(1 + index)}`] = 
               let i = 0;
@@ -75,7 +60,7 @@ const Sheet: React.FC<SheetProps> = ({ numberOfRows, numberOfColumns, getData, s
           }
         })
       } else {
-        const newData: DataType = { ...data };
+        const newData: DataFormatSave = { ...data };
         newData[`${row}${column}`] = value;
         setData(newData);
       }

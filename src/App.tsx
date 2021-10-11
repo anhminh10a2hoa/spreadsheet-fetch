@@ -1,31 +1,28 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, FC } from 'react';
 import './App.css';
 import { Reset } from 'styled-reset';
 import { AppContainer, Button, InputWrapper, NumberInput, Label, Title } from "./styles";
 
 import { getColumnIndex } from "./utils/helper";
 import Sheet from './components/Sheet';
+import { DataFormatSave, InputEvent, DownloadFileType } from "./types/types";
 
-type SimpleRowAndColumn = {
-  [key:string]: number | string;
-}
-
-const App: React.FC = () => {
+const App: FC = () => {
   const [numberOfRows, setNumberOfRows] = useState<number>(30)
   const [numberOfColumns, setNumberOfColumns] = useState<number>(30)
   const [tempRow, setTempRow] = useState<number>(numberOfRows)
   const [tempColumn, setTempColumn] = useState<number>(numberOfColumns)
-  const [simpleRowAndColumn, setSimpleRowAndColumn] = useState<SimpleRowAndColumn>({})
+  const [simpleRowAndColumn, setSimpleRowAndColumn] = useState<DataFormatSave>({})
   const [resetData, setResetData] = useState<number>(0)
-  const getData = React.useRef<any>(null)
+  const getData = useRef<DataFormatSave>({})
 
-  const handleChangeNumberOfRows = (event: React.ChangeEvent<HTMLInputElement>): void => {
+  const handleChangeNumberOfRows = (event: InputEvent): void => {
     event.preventDefault();
     const row: number = parseInt(event.target.value)
     setTempRow(row)
   }
 
-  const handleChangeNumberOfColumns = (event: React.ChangeEvent<HTMLInputElement>): void => {
+  const handleChangeNumberOfColumns = (event: InputEvent): void => {
     event.preventDefault();
     const column: number = parseInt(event.target.value)
     setTempColumn(column)
@@ -41,9 +38,9 @@ const App: React.FC = () => {
   }
 
   const simpleHandler = ():void => {
-    const data = getData.current
-    const firstKey = Object.keys(data)[0];
-    const lastKey = Object.keys(data)[Object.keys(data).length - 1];
+    const data: DataFormatSave = getData.current
+    const firstKey: string = Object.keys(data)[0];
+    const lastKey: string = Object.keys(data)[Object.keys(data).length - 1];
     if(firstKey) {
       const firstRow: number = parseInt(firstKey.match(/^\d+|\d+\b|\d+(?=\w)/g)![0])
       const firstColumn: string = firstKey.toString().substring(firstRow.toString().length, firstKey.length)
@@ -73,6 +70,33 @@ const App: React.FC = () => {
     setTempColumn(30)
   }
 
+  const downloadFile = ({ data, fileName, fileType }:DownloadFileType) => {
+    // Create a blob with the data we want to download as a file
+    const blob = new Blob([data], { type: fileType })
+    // Create an anchor element and dispatch a click event on it
+    // to trigger a download
+    const a: HTMLAnchorElement = document.createElement('a')
+    a.download = fileName
+    a.href = window.URL.createObjectURL(blob)
+    const clickEvt = new MouseEvent('click', {
+      view: window,
+      bubbles: true,
+      cancelable: true,
+    })
+    a.dispatchEvent(clickEvt)
+    a.remove()
+  }
+
+  const exportJsonHandler = (event: React.MouseEvent<HTMLButtonElement>):void => {
+    event.preventDefault()
+    const data: DataFormatSave = getData.current
+    downloadFile({
+      data: JSON.stringify(data),
+      fileName: 'users.json',
+      fileType: 'text/json',
+    })
+  }
+
   return (
     <> 
       <Title>Fetch Sheet</Title>
@@ -90,6 +114,7 @@ const App: React.FC = () => {
       <Button type="button" onClick={submitChange}>Change</Button>
       <Button type="button" onClick={simpleHandler}>Simple</Button>
       <Button type="button" onClick={resetHandler}>Reset</Button>
+      <Button type="button" onClick={exportJsonHandler}>Export JSON</Button>
      
       </InputWrapper>
       <AppContainer>
