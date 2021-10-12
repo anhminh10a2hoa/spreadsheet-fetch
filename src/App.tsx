@@ -47,17 +47,21 @@ const App: FC = () => {
       const firstColumn: string = firstKey.toString().substring(firstRow.toString().length, firstKey.length)
       const lastRow: number = parseInt(lastKey.match(/^\d+|\d+\b|\d+(?=\w)/g)![0])
       const lastColumn: string = lastKey.toString().substring(lastRow.toString().length, lastKey.length)
+      console.log(firstRow)
+      console.log(getColumnIndex(firstColumn) - getColumnIndex('A'))
       setSimpleRowAndColumn({
-        'startRow':firstRow,
+        'startRow':firstRow - 1,
         'startCol':getColumnIndex(firstColumn) - getColumnIndex('A')
       })
-      if(numberOfRows !== lastRow - firstRow && lastRow - firstRow > 2) {
-        setNumberOfRows(lastRow - firstRow + 1)
-        setTempRow(lastRow - firstRow)
+      const startRow = lastRow - firstRow === 0 ? 2 : lastRow - firstRow + 2
+      const startCol = getColumnIndex(lastColumn) - getColumnIndex(firstColumn) === 0 ? 2 : getColumnIndex(lastColumn) - getColumnIndex(firstColumn) + 2
+      if(numberOfRows !== startRow) {
+        setNumberOfRows(startRow)
+        setTempRow(startRow - 1)
       }
-      if(numberOfColumns !== getColumnIndex(lastColumn) - getColumnIndex(firstColumn) + 2 && getColumnIndex(lastColumn) - getColumnIndex(firstColumn) + 2 > 2) {
-        setNumberOfColumns(getColumnIndex(lastColumn) - getColumnIndex(firstColumn) + 2)
-        setTempColumn(getColumnIndex(lastColumn) - getColumnIndex(firstColumn) + 1)
+      if(numberOfColumns !== startCol) {
+        setNumberOfColumns(startCol)
+        setTempColumn(startCol - 1)
       }
     }
   }
