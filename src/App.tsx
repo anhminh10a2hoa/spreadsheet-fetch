@@ -1,10 +1,11 @@
 import React, { useState, useRef, FC } from 'react';
 import './App.css';
 import { Reset } from 'styled-reset';
-import { AppContainer, Button, InputWrapper, NumberInput, Label, Title } from "./styles";
+import { AppContainer, Button, InputWrapper, NumberInput, Label, Navbar, Title, IconContainer, SaveIcon, OpenIcon, ResetIcon, SetupContainer, ChangeIcon, SimpleIcon, OpenIconContainer, InputHidden } from "./styles";
 
 import { getColumnIndex } from "./utils/helper";
 import Sheet from './components/Sheet';
+
 import { DataFormatSave, InputEvent, DownloadFileType } from "./types/types";
 
 const App: FC = () => {
@@ -47,8 +48,6 @@ const App: FC = () => {
       const firstColumn: string = firstKey.toString().substring(firstRow.toString().length, firstKey.length)
       const lastRow: number = parseInt(lastKey.match(/^\d+|\d+\b|\d+(?=\w)/g)![0])
       const lastColumn: string = lastKey.toString().substring(lastRow.toString().length, lastKey.length)
-      console.log(firstRow)
-      console.log(getColumnIndex(firstColumn) - getColumnIndex('A'))
       setSimpleRowAndColumn({
         'startRow':firstRow - 1,
         'startCol':getColumnIndex(firstColumn) - getColumnIndex('A')
@@ -92,7 +91,7 @@ const App: FC = () => {
     a.remove()
   }
 
-  const exportJsonHandler = (event: React.MouseEvent<HTMLButtonElement>):void => {
+  const exportJsonHandler = (event: React.MouseEvent<any>):void => {
     event.preventDefault()
     const data: DataFormatSave = getData.current
     downloadFile({
@@ -123,25 +122,32 @@ const App: FC = () => {
 
   return (
     <> 
-      <Title>Fetch Sheet</Title>
-      <InputWrapper>
-      <Label>
-        Number of rows:
-      </Label>
-      <NumberInput placeholder="Rows" type="number" value={tempRow} onChange={handleChangeNumberOfRows} />
-      
-      <Label>
-        Number of columns:
-      </Label>
-        <NumberInput placeholder="Columns" type="number" value={tempColumn} onChange={handleChangeNumberOfColumns} />
-     
-      <Button type="button" onClick={submitChange}>Change</Button>
-      <Button type="button" onClick={simpleHandler}>Simple</Button>
-      <Button type="button" onClick={resetHandler}>Reset</Button>
-      <Button type="button" onClick={exportJsonHandler}>Export JSON</Button>
-      <input type="file" onChange={importJsonHandler} />
-     
-      </InputWrapper>
+      <Navbar>
+        <IconContainer>
+          <SaveIcon onClick={exportJsonHandler}/>
+          
+          <ResetIcon onClick={resetHandler}/>
+          <SimpleIcon onClick={simpleHandler}/>
+          <OpenIconContainer>
+            <label htmlFor="file-input">
+              <OpenIcon />
+            </label>
+            <InputHidden id="file-input" type="file" onChange={importJsonHandler} />
+          </OpenIconContainer>
+        </IconContainer>
+        <SetupContainer>
+          <Label>
+            rows
+          </Label>
+          <NumberInput placeholder="Rows" type="number" value={tempRow} onChange={handleChangeNumberOfRows} />
+          <Label>
+            columns
+          </Label>
+          <NumberInput placeholder="Columns" type="number" value={tempColumn} onChange={handleChangeNumberOfColumns} />
+          <ChangeIcon onClick={submitChange}/>
+        </SetupContainer>
+        <Title>Spreadsheet - sheet1</Title>
+      </Navbar>
       <AppContainer>
         <Reset />
         <Sheet numberOfRows={numberOfRows} numberOfColumns={numberOfColumns} getData={getData} resetData={resetData} simpleRowAndColumn={simpleRowAndColumn} dataJson={dataJson}/>

@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { AiOutlineSave, AiFillFolderOpen, AiOutlineReload, AiFillPlayCircle, AiFillBulb } from "react-icons/ai";
 
 interface SheetProps {
   numberOfColumns: number;
@@ -14,7 +15,7 @@ export const Sheet = styled.div`
 `;
 
 export const Label = styled.label`
-  font-size: 18px;
+  font-size: 1rem;
   font-weight: 500;
 `;
 
@@ -41,16 +42,70 @@ export const Button = styled.button`
   }
 `;
 
-export const Title = styled.h1`
+export const Navbar = styled.div`
   padding: 30px;
   text-align: center;
-  background: #2c6111;
+  background: #1d7545;
   color: white;
   font-size: 30px;
-  
 `;
 
+export const Title = styled.p`
+  font-size: 20px;
+`
 
+export const IconContainer = styled.div`
+  position: absolute;
+  top: 5px;
+  left: 5px;
+`
+
+export const SaveIcon = styled(AiOutlineSave)`
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 5px;
+`
+
+export const OpenIcon = styled(AiFillFolderOpen)`
+  font-size: 1.5rem;
+  cursor: pointer;
+`
+
+export const ResetIcon = styled(AiOutlineReload)`
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 5px;
+  margin-left: 2rem;
+`
+
+export const ChangeIcon = styled(AiFillPlayCircle)`
+  font-size: 1.5rem;
+  cursor: pointer;
+  margin-bottom: -7px;
+`
+
+export const SimpleIcon = styled(AiFillBulb)`
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 5px;
+`
+
+export const OpenIconContainer = styled.div`
+  position: absolute;
+  cursor: pointer;
+  top: 5px;
+  left: 2.5rem;
+`
+
+export const InputHidden = styled.input`
+  display: none;
+`
+
+export const SetupContainer = styled.div`
+  position: absolute;
+  top: 2.5rem;
+  left: 10px;
+`
 
 export const InputWrapper = styled.div`
   margin-left: 60px;
@@ -58,9 +113,8 @@ export const InputWrapper = styled.div`
 `;
 
 export const NumberInput = styled.input`
-  padding:5px;
-  border-radius: 30px;
-  margin: 10px
+  margin: 10px;
+  width: 50px;
 `;
 
 export const Header = styled.div`
@@ -84,11 +138,7 @@ export const Input = styled.input`
 `;
 
 export const AppContainer = styled.div`
-  border: 2px solid;
-  max-height: calc(90vh);
-  max-width: calc(90vw);
-  resize: both;
-  margin: auto;
+  max-width: 100vw;
   overflow: auto;
-  margin-bottom: 20px;
+  height: calc(100vh - 80px);
 `

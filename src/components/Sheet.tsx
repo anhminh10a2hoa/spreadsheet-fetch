@@ -44,7 +44,6 @@ const Sheet: React.FC<SheetProps> = ({ numberOfRows, numberOfColumns, getData, s
     for (const item in data) {
       const row = parseInt(item.match(/^\d+|\d+\b|\d+(?=\w)/g)![0])
       const column = item.toString().substring(row.toString().length, item.length)
-      console.log(row, column)
       newData[`${row-simpleRowAndColumn['startRow']}${getColumnName(getColumnIndex(column)-simpleRowAndColumn['startCol'])}`] = data[item]
     }
     setData(newData)
