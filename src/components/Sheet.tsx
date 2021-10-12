@@ -1,7 +1,7 @@
-import React, { useState, Fragment, useEffect } from "react";
+import React, { useState, Fragment, useEffect, useRef, useCallback } from "react";
 import axios from "axios";
 import { Sheet as StyledSheet } from "../styles";
-
+import ColumnResizer from "react-column-resizer";
 import { getColumnName, getColumnIndex } from "../utils/helper";
 import Cell from "./Cell";
 
@@ -21,6 +21,9 @@ type CallbackType = (...args: any) => void
 
 const Sheet: React.FC<SheetProps> = ({ numberOfRows, numberOfColumns, getData, simpleRowAndColumn, resetData, dataJson, textInput, inputIndex }) => {
   const [data, setData] = useState<DataFormatSave>({});
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  const tableElement = useRef(null);
+
 
   useEffect(() => {
     if(data) {
@@ -150,8 +153,39 @@ const Sheet: React.FC<SheetProps> = ({ numberOfRows, numberOfColumns, getData, s
     [data]
   );
 
+  const mouseDown = (index: number) => {
+    setActiveIndex(index);
+  };
+
+
+  //  const mouseMove = (e: any) => {
+  //    //
+  //  }
+
+  // const removeListeners = useCallback(() => {
+  //   window.removeEventListener("mousemove", mouseMove);
+  //   window.removeEventListener("mouseup", removeListeners);
+  // }, [mouseMove]);
+
+  // const mouseUp = useCallback(() => {
+  //   setActiveIndex(null);
+  //   removeListeners();
+  // }, [setActiveIndex, removeListeners]);
+
+  // useEffect(() => {
+  //   if (activeIndex !== null) {
+  //     window.addEventListener("mousemove", mouseMove);
+  //     window.addEventListener("mouseup", mouseUp);
+  //   }
+
+  //   return () => {
+  //     removeListeners();
+  //   };
+  // }, [activeIndex, mouseMove, mouseUp, removeListeners]);
+
+
   return (
-    <StyledSheet numberOfColumns={numberOfColumns}>
+    <StyledSheet numberOfColumns={numberOfColumns} ref={tableElement}>
       {Array(numberOfRows)
         .fill(0)
         .map((_, i: number) => {
@@ -161,7 +195,12 @@ const Sheet: React.FC<SheetProps> = ({ numberOfRows, numberOfColumns, getData, s
                 .fill(0)
                 .map((_, j: number) => {
                   const columnName: string = getColumnName(j);
+                  if(columnName.length === 1) {
+                    console.log(columnName)
+                  }
                   return (
+                    <>
+                    
                     <Cell
                       rowIndex={i}
                       columnIndex={j}
@@ -170,7 +209,10 @@ const Sheet: React.FC<SheetProps> = ({ numberOfRows, numberOfColumns, getData, s
                       currentValue={data[`${i}${columnName}`]}
                       computeCell={computeCell}
                       key={`${columnName}${i}`}
+                      //onMouseDown={() => mouseDown(i)}
                     />
+                   
+                    </>
                   );
                 })}
             </Fragment>
