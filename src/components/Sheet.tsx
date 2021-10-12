@@ -1,7 +1,7 @@
 import React, { useState, Fragment, useEffect, useRef, useCallback } from "react";
 import axios from "axios";
 import { Sheet as StyledSheet } from "../styles";
-import ColumnResizer from "react-column-resizer";
+
 import { getColumnName, getColumnIndex } from "../utils/helper";
 import Cell from "./Cell";
 

@@ -65,37 +65,38 @@ export const IconContainer = styled.div`
 export const SaveIcon = styled(AiOutlineSave)`
   font-size: 1.5rem;
   cursor: pointer;
-  padding: 5px;
+
 `
 
 export const OpenIcon = styled(AiFillFolderOpen)`
-  font-size: 1.5rem;
+  font-size: 1.7rem;
   cursor: pointer;
+  margin-bottom: -5px;
 `
 
 export const ResetIcon = styled(AiOutlineReload)`
   font-size: 1.5rem;
   cursor: pointer;
-  padding: 5px;
-  margin-left: 2rem;
+
 `
 
 export const ChangeIcon = styled(AiFillPlayCircle)`
-  font-size: 1.5rem;
+  font-size: 1.8rem;
   cursor: pointer;
-  margin-bottom: -7px;
+  margin-left: 10px;
+  margin-bottom: -5px;
 `
 
 export const SimpleIcon = styled(AiFillBulb)`
   font-size: 1.5rem;
   cursor: pointer;
-  padding: 5px;
+
 `
 
 export const EditFileName = styled(AiFillEdit)`
   font-size: 1.5rem;
   cursor: pointer;
-  padding: 5px;
+
 `
 
 export const OpenIconContainer = styled.div`
@@ -122,7 +123,7 @@ export const InputWrapper = styled.div`
 
 export const NumberInput = styled.input`
   margin: 10px;
-  width: 50px;
+  width: 80px;
 `;
 
 export const Header = styled.div`

@@ -2,10 +2,10 @@ import React, { useState, useRef, useEffect, FC } from 'react';
 import './App.css';
 import { Reset } from 'styled-reset';
 import { AppContainer, InputExtensionContainer, NumberInput, Label, Navbar, Title, IconContainer, SaveIcon, OpenIcon, ResetIcon, SetupContainer, ChangeIcon, SimpleIcon, OpenIconContainer, InputHidden, EditFileName, TextInput, IndexInput, BarrierIcon } from "./styles";
-
+import Tooltip from '@mui/material/Tooltip';
 import { getColumnIndex } from "./utils/helper";
 import Sheet from './components/Sheet';
-
+import IconButton from '@mui/material/IconButton';
 import { DataFormatSave, InputEvent, DownloadFileType } from "./types/types";
 
 const App: FC = () => {
@@ -148,27 +148,53 @@ const App: FC = () => {
     <React.Fragment> 
       <Navbar>
         <IconContainer>
-          <SaveIcon onClick={exportJsonHandler}/>
-          <ResetIcon onClick={resetHandler}/>
-          <SimpleIcon onClick={simpleHandler}/>
-          <OpenIconContainer>
+          <Tooltip title="Save">
+          <IconButton color="inherit" size="medium">
+            <SaveIcon onClick={exportJsonHandler}/>
+          </IconButton>
+          </Tooltip>
+
+          <Tooltip title="Reset">
+          <IconButton color="inherit">
+            <ResetIcon onClick={resetHandler}/>
+          </IconButton>
+          </Tooltip>
+         
+          <Tooltip title="Simple Input Mode">
+          <IconButton color="inherit">
+            <SimpleIcon onClick={simpleHandler}/>
+          </IconButton>
+          </Tooltip>
+          
+         <Tooltip title="Import Json">
+          <IconButton color="inherit">
             <label htmlFor="file-input">
               <OpenIcon />
             </label>
             <InputHidden id="file-input" type="file" onChange={importJsonHandler} />
-          </OpenIconContainer>
-          <EditFileName />
+          </IconButton>
+          </Tooltip>
+          <Tooltip title="Edit file">
+          <IconButton color="inherit">
+             <EditFileName />
+          </IconButton>
+          </Tooltip>
+         
         </IconContainer>
         <SetupContainer>
           <Label>
-            rows
+            Rows: 
           </Label>
           <NumberInput placeholder="Rows" type="number" value={tempRow} onChange={handleChangeNumberOfRows} />
           <Label>
-            columns
+            Columns:
           </Label>
           <NumberInput placeholder="Columns" type="number" value={tempColumn} onChange={handleChangeNumberOfColumns} />
-          <ChangeIcon onClick={submitChange}/>
+          <Tooltip title="Change">
+          <IconButton color="inherit" size="medium">
+         <ChangeIcon onClick={submitChange}/>
+         </IconButton>
+          </Tooltip>
         </SetupContainer>
         <Title>Spreadsheet - {fileName}</Title>
       </Navbar>
