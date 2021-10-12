@@ -15,3 +15,8 @@ export type CellValueType = {
   column: string;
   value?: number | string;
 }
+
+export type CellValueTypeByIndex = {
+  inputIndex: string;
+  value?: number | string;
+}

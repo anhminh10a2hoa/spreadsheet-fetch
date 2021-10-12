@@ -60,7 +60,7 @@ const Cell: React.FC<CellProps> = ({
       onFocus={() => setEdit(true)}
       value={value}
       type="text"
-      id={columnName + rowIndex}
+      id={rowIndex+columnName}
       className="cell-input"
       onChange={handleChange}
     />

@@ -28,7 +28,7 @@ const App: FC = () => {
         setInputIndex(active.id)
         setTextInput(active.value)
       }
-    }, 1000);
+    }, 500);
     return () => clearInterval(interval);
   }, []);
 
@@ -134,6 +134,16 @@ const App: FC = () => {
     }
   };
 
+  const textInputHandler = (e: any) => {
+    e.preventDefault()
+    setTextInput(e.target.value)
+  }
+
+  const inputIndexHandler = (e: any) => {
+    e.preventDefault()
+    //empty
+  }
+
   return (
     <React.Fragment> 
       <Navbar>
@@ -163,13 +173,13 @@ const App: FC = () => {
         <Title>Spreadsheet - {fileName}</Title>
       </Navbar>
       <InputExtensionContainer>
-        <IndexInput type="text" value={inputIndex} />
+        <IndexInput type="text" value={inputIndex} onChange={inputIndexHandler}/>
         <BarrierIcon />
-        <TextInput type="text" value={textInput} />
+        <TextInput type="text" value={textInput} onChange={textInputHandler}/>
       </InputExtensionContainer>
       <AppContainer>
         <Reset />
-        <Sheet numberOfRows={numberOfRows} numberOfColumns={numberOfColumns} getData={getData} resetData={resetData} simpleRowAndColumn={simpleRowAndColumn} dataJson={dataJson}/>
+        <Sheet numberOfRows={numberOfRows} numberOfColumns={numberOfColumns} getData={getData} resetData={resetData} simpleRowAndColumn={simpleRowAndColumn} dataJson={dataJson} inputIndex={inputIndex} textInput={textInput}/>
       </AppContainer>
     </React.Fragment>
   );

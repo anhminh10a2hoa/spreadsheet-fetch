@@ -5,7 +5,7 @@ import { Sheet as StyledSheet } from "../styles";
 import { getColumnName, getColumnIndex } from "../utils/helper";
 import Cell from "./Cell";
 
-import { CellValueType, DataFormatSave } from "../types/types";
+import { CellValueType, DataFormatSave, CellValueTypeByIndex } from "../types/types";
 interface SheetProps {
   numberOfRows: number;
   numberOfColumns: number;
@@ -13,11 +13,13 @@ interface SheetProps {
   resetData: number;
   simpleRowAndColumn: DataFormatSave;
   dataJson: DataFormatSave | null;
+  inputIndex: string;
+  textInput: string;
 }
 
 type CallbackType = (...args: any) => void
 
-const Sheet: React.FC<SheetProps> = ({ numberOfRows, numberOfColumns, getData, simpleRowAndColumn, resetData, dataJson }) => {
+const Sheet: React.FC<SheetProps> = ({ numberOfRows, numberOfColumns, getData, simpleRowAndColumn, resetData, dataJson, textInput, inputIndex }) => {
   const [data, setData] = useState<DataFormatSave>({});
 
   useEffect(() => {
@@ -29,6 +31,15 @@ const Sheet: React.FC<SheetProps> = ({ numberOfRows, numberOfColumns, getData, s
   useEffect(() => {
     setData({})
   }, [resetData])
+
+  useEffect(() => {
+    if(inputIndex !== "" && inputIndex) {
+      setCellValueByIndex({
+        inputIndex: inputIndex,
+        value: textInput
+      })
+    }
+  }, [textInput, inputIndex])
 
   useEffect(() => {
     if(dataJson) {
@@ -72,6 +83,33 @@ const Sheet: React.FC<SheetProps> = ({ numberOfRows, numberOfColumns, getData, s
       } else {
         const newData: DataFormatSave = { ...data };
         newData[`${row}${column}`] = value;
+        setData(newData);
+      }
+    },
+    [data, setData]
+  );
+
+  const setCellValueByIndex = React.useCallback<CallbackType>(
+    ({ inputIndex, value }: CellValueTypeByIndex) => {
+      if(typeof value === 'string' && value.includes("fetch('") && value.includes("')")) {
+        const query: Array<string> = value.split("fetch('")
+        axios.get(`${process.env.REACT_APP_PROJECT_WARE_SPARQL}&query=${query[1].substr(0, query[1].length - 2)}`).then((res) => {
+          if(Array.isArray(res.data.results.bindings)) {
+            const fetchData: DataFormatSave = { ...data };
+            for (const [index, element] of res.data.results.bindings.entries()) {
+              // fetchData[`${parseInt(columnStart)}${getColumnName(1 + index)}`] = 
+              let i = 0;
+              for (const prop in element) {
+                fetchData[`${inputIndex}`] = element[prop].value
+                i++;
+              }
+            }
+            setData(fetchData);
+          }
+        })
+      } else {
+        const newData: DataFormatSave = { ...data };
+        newData[`${inputIndex}`] = value;
         setData(newData);
       }
     },
