@@ -1,7 +1,7 @@
-import React, { useState, useRef, FC } from 'react';
+import React, { useState, useRef, useEffect, FC } from 'react';
 import './App.css';
 import { Reset } from 'styled-reset';
-import { AppContainer, Button, InputWrapper, NumberInput, Label, Navbar, Title, IconContainer, SaveIcon, OpenIcon, ResetIcon, SetupContainer, ChangeIcon, SimpleIcon, OpenIconContainer, InputHidden } from "./styles";
+import { AppContainer, InputExtensionContainer, NumberInput, Label, Navbar, Title, IconContainer, SaveIcon, OpenIcon, ResetIcon, SetupContainer, ChangeIcon, SimpleIcon, OpenIconContainer, InputHidden, EditFileName, TextInput, IndexInput, BarrierIcon } from "./styles";
 
 import { getColumnIndex } from "./utils/helper";
 import Sheet from './components/Sheet';
@@ -15,8 +15,22 @@ const App: FC = () => {
   const [tempColumn, setTempColumn] = useState<number>(numberOfColumns)
   const [simpleRowAndColumn, setSimpleRowAndColumn] = useState<DataFormatSave>({})
   const [resetData, setResetData] = useState<number>(0)
+  const [fileName, setFileName] = useState<string>("sheet 1")
   const [dataJson, setDataJson] = useState<DataFormatSave | null>(null)
+  const [inputIndex, setInputIndex] = React.useState("");
+  const [textInput, setTextInput] = React.useState("");
   const getData = useRef<DataFormatSave>({})
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const active = document.activeElement as HTMLInputElement | null
+      if(active?.classList.contains("cell-input")) {
+        setInputIndex(active.id)
+        setTextInput(active.value)
+      }
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   const handleChangeNumberOfRows = (event: InputEvent): void => {
     event.preventDefault();
@@ -96,7 +110,7 @@ const App: FC = () => {
     const data: DataFormatSave = getData.current
     downloadFile({
       data: JSON.stringify(data),
-      fileName: 'users.json',
+      fileName: fileName + '.json',
       fileType: 'text/json',
     })
   }
@@ -121,11 +135,10 @@ const App: FC = () => {
   };
 
   return (
-    <> 
+    <React.Fragment> 
       <Navbar>
         <IconContainer>
           <SaveIcon onClick={exportJsonHandler}/>
-          
           <ResetIcon onClick={resetHandler}/>
           <SimpleIcon onClick={simpleHandler}/>
           <OpenIconContainer>
@@ -134,6 +147,7 @@ const App: FC = () => {
             </label>
             <InputHidden id="file-input" type="file" onChange={importJsonHandler} />
           </OpenIconContainer>
+          <EditFileName />
         </IconContainer>
         <SetupContainer>
           <Label>
@@ -146,13 +160,18 @@ const App: FC = () => {
           <NumberInput placeholder="Columns" type="number" value={tempColumn} onChange={handleChangeNumberOfColumns} />
           <ChangeIcon onClick={submitChange}/>
         </SetupContainer>
-        <Title>Spreadsheet - sheet1</Title>
+        <Title>Spreadsheet - {fileName}</Title>
       </Navbar>
+      <InputExtensionContainer>
+        <IndexInput type="text" value={inputIndex} />
+        <BarrierIcon />
+        <TextInput type="text" value={textInput} />
+      </InputExtensionContainer>
       <AppContainer>
         <Reset />
         <Sheet numberOfRows={numberOfRows} numberOfColumns={numberOfColumns} getData={getData} resetData={resetData} simpleRowAndColumn={simpleRowAndColumn} dataJson={dataJson}/>
       </AppContainer>
-    </>
+    </React.Fragment>
   );
 }
 

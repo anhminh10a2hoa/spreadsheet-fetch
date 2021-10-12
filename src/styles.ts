@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { AiOutlineSave, AiFillFolderOpen, AiOutlineReload, AiFillPlayCircle, AiFillBulb } from "react-icons/ai";
+import { AiOutlineSave, AiFillFolderOpen, AiOutlineReload, AiFillPlayCircle, AiFillBulb, AiFillEdit, AiOutlineHolder } from "react-icons/ai";
 
 interface SheetProps {
   numberOfColumns: number;
@@ -90,6 +90,12 @@ export const SimpleIcon = styled(AiFillBulb)`
   padding: 5px;
 `
 
+export const EditFileName = styled(AiFillEdit)`
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 5px;
+`
+
 export const OpenIconContainer = styled.div`
   position: absolute;
   cursor: pointer;
@@ -125,7 +131,7 @@ export const Header = styled.div`
 `;
 
 export const Input = styled.input`
-   resize: both;
+  resize: both;
   overflow: auto;
   padding: 0 4px;
   :not(:focus) {
@@ -140,5 +146,26 @@ export const Input = styled.input`
 export const AppContainer = styled.div`
   max-width: 100vw;
   overflow: auto;
-  height: calc(100vh - 80px);
+  height: calc(100vh - 123px);
+`
+
+export const InputExtensionContainer = styled.div`
+  padding: 10px;
+  background-color: #e6e6e6;
+`
+
+export const TextInput = styled.input`
+  width: 40rem;
+`
+
+export const IndexInput = styled.input`
+  width: 50px;
+  margin-right: 10px;
+`
+
+export const BarrierIcon = styled(AiOutlineHolder)`
+  font-size: 1.5rem;
+  cursor: pointer;
+  margin-bottom: -7px;
+  margin-right: 10px;
 `
