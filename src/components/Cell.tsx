@@ -11,6 +11,8 @@ interface CellProps {
   // type check
   computeCell: (...args: any) => void;
   currentValue: number;
+  numOfCol: number;
+  numOfRow: number;
 }
 
 enum KeyCode {
@@ -28,7 +30,9 @@ const Cell: React.FC<CellProps> = ({
   columnName,
   setCellValue,
   computeCell,
-  currentValue
+  currentValue,
+  numOfCol,
+  numOfRow,
 }) => {
   const [edit, setEdit] = useState<boolean>(false);
 
@@ -52,36 +56,44 @@ const Cell: React.FC<CellProps> = ({
 
   function keyDownEvent(event: React.KeyboardEvent<HTMLInputElement>){
     let eventKey: string = event.key;
-    let currentInputId: string = rowIndex+columnName;
-    let afterInputId: string = "";
-    
-    if(eventKey === KeyCode.DOWN){
-
-      let newRowIndex = rowIndex + 1;
-      afterInputId = newRowIndex + columnName; 
-    
-    }else if (eventKey === KeyCode.UP){
-    
-      let newRowIndex = rowIndex - 1;
-      afterInputId = newRowIndex + columnName; 
-   
-    }else if (eventKey === KeyCode.LEFT){
-
-      let newColumnName = getColumnName(columnIndex - 1);
-      afterInputId = rowIndex + newColumnName;
-
-    }else if (eventKey === KeyCode.RIGHT){
-
-      let newColumnName = getColumnName(columnIndex + 1);
-      afterInputId = rowIndex + newColumnName;
-    
-    }
-
     if(eventKey === KeyCode.DOWN || eventKey === KeyCode.UP || eventKey === KeyCode.LEFT || eventKey === KeyCode.RIGHT){
-      console.log("column: ",columnName);
-      console.log("row: ",rowIndex)
-      document.getElementById(currentInputId)?.blur();
-      document.getElementById(afterInputId)?.focus();
+      let currentInputId: string = rowIndex+columnName;
+      let afterInputId: string = "";
+      let endOfSheet: boolean = false;
+
+      if(eventKey === KeyCode.DOWN){
+        let newRowIndex = rowIndex + 1;
+        if(newRowIndex < numOfRow)
+          afterInputId = newRowIndex + columnName; 
+        else 
+          endOfSheet = true;
+      
+      }else if (eventKey === KeyCode.UP){
+        let newRowIndex = rowIndex - 1;
+        if(newRowIndex > 0)
+          afterInputId = newRowIndex + columnName; 
+        else 
+          endOfSheet = true;
+    
+      }else if (eventKey === KeyCode.LEFT){
+        let newColumnName = getColumnName(columnIndex - 1);
+        if(columnIndex > 1)
+          afterInputId = rowIndex + newColumnName;
+        else 
+          endOfSheet = true;
+
+      }else if (eventKey === KeyCode.RIGHT){
+        let newColumnName = getColumnName(columnIndex + 1);
+        if(columnIndex < numOfCol-1)
+          afterInputId = rowIndex + newColumnName;
+        else
+          endOfSheet = true;
+      
+      }
+      if(!endOfSheet){
+        document.getElementById(currentInputId)?.blur();
+        document.getElementById(afterInputId)?.focus();
+      }
     }
   }
 

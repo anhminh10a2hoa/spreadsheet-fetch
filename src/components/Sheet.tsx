@@ -195,9 +195,6 @@ const Sheet: React.FC<SheetProps> = ({ numberOfRows, numberOfColumns, getData, s
                 .fill(0)
                 .map((_, j: number) => {
                   const columnName: string = getColumnName(j);
-                  if(columnName.length === 1) {
-                    console.log(columnName)
-                  }
                   return (
                     <>
                     
@@ -209,6 +206,8 @@ const Sheet: React.FC<SheetProps> = ({ numberOfRows, numberOfColumns, getData, s
                       currentValue={data[`${i}${columnName}`]}
                       computeCell={computeCell}
                       key={`${columnName}${i}`}
+                      numOfCol={numberOfColumns}
+                      numOfRow={numberOfRows}
                       //onMouseDown={() => mouseDown(i)}
                     />
                    
