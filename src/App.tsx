@@ -207,7 +207,7 @@ const App: FC = () => {
       </InputExtensionContainer>
       <AppContainer>
         <Reset />
-        <Sheet numberOfRows={numberOfRows} numberOfColumns={numberOfColumns} getData={getData} resetData={resetData} simpleRowAndColumn={simpleRowAndColumn} dataJson={dataJson} inputIndex={inputIndex} textInput={textInput}/>
+        <Sheet numberOfRows={numberOfRows + 1} numberOfColumns={numberOfColumns + 1} getData={getData} resetData={resetData} simpleRowAndColumn={simpleRowAndColumn} dataJson={dataJson} inputIndex={inputIndex} textInput={textInput}/>
       </AppContainer>
     </React.Fragment>
   );
