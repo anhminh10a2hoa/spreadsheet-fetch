@@ -82,13 +82,12 @@ export const ResetIcon = styled(AiOutlineReload)`
 export const ChangeIcon = styled(AiFillPlayCircle)`
   font-size: 1.5rem;
   cursor: pointer;
-  margin-left: 0px;
+  margin-bottom: -4px;
 `
 
 export const SimpleIcon = styled(AiFillBulb)`
   font-size: 1.5rem;
   cursor: pointer;
-
 `
 
 export const EditFileName = styled(AiFillEdit)`
@@ -108,7 +107,7 @@ export const SetupContainer = styled.div`
 
 export const InputWrapper = styled.div`
   margin-left: 60px;
-  margin-top:20px;
+  margin-top: 20px;
 `;
 
 export const NumberInput = styled.input`
@@ -166,11 +165,13 @@ export const BarrierIcon = styled(AiOutlineHolder)`
 export const RowIcon = styled(AiOutlineInsertRowLeft)`
   font-size: 1.5rem;
   cursor: pointer;
+  margin-bottom: -4px;
 `
 
 export const ColumnIcon = styled(AiOutlineInsertRowAbove)`
   font-size: 1.5rem;
   cursor: pointer;
+  margin-bottom: -4px;
 `
 
 export const GithubIcon = styled(AiFillGithub)`
