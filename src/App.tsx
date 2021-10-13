@@ -180,9 +180,17 @@ const App: FC = () => {
           </Tooltip>
         </IconContainer>
         <SetupContainer>
-          <RowIcon />
+          <Tooltip title="Number of rows: ">
+            <IconButton color="inherit">
+               <RowIcon />
+            </IconButton>
+          </Tooltip>
           <NumberInput placeholder="Rows" type="number" value={tempRow} onChange={handleChangeNumberOfRows} />
-          <ColumnIcon />
+           <Tooltip title="Number of columns: ">
+            <IconButton color="inherit">
+               <ColumnIcon /> 
+            </IconButton>
+          </Tooltip>
           <NumberInput placeholder="Columns" type="number" value={tempColumn} onChange={handleChangeNumberOfColumns} />
           <Tooltip title="Change">
           <IconButton color="inherit" size="medium">

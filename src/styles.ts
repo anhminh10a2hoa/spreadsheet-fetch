@@ -5,8 +5,7 @@ interface SheetProps {
   numberOfColumns: number;
 }
 
-export const Sheet = styled.div`
-  
+export const Sheet = styled.div`s
   overflow: auto;
   display: grid;
   grid-template-columns: 32px repeat(
@@ -44,15 +43,17 @@ export const Button = styled.button`
 `;
 
 export const Navbar = styled.div`
-  padding: 30px;
+  padding: 35px;
   text-align: center;
   background: #1d7545;
   color: white;
   font-size: 30px;
+
 `;
 
 export const Title = styled.p`
   font-size: 20px;
+  padding: 0;
 `
 
 export const IconContainer = styled.div`
@@ -64,7 +65,7 @@ export const IconContainer = styled.div`
 export const SaveIcon = styled(AiOutlineSave)`
   font-size: 1.5rem;
   cursor: pointer;
-
+  margin-left: 5px;
 `
 
 export const OpenIcon = styled(AiFillFolderOpen)`
@@ -82,7 +83,6 @@ export const ChangeIcon = styled(AiFillPlayCircle)`
   font-size: 1.5rem;
   cursor: pointer;
   margin-left: 0px;
-  margin-bottom: -5px;
 `
 
 export const SimpleIcon = styled(AiFillBulb)`
@@ -166,11 +166,11 @@ export const BarrierIcon = styled(AiOutlineHolder)`
 export const RowIcon = styled(AiOutlineInsertRowLeft)`
   font-size: 1.5rem;
   cursor: pointer;
-  margin-bottom: -7px;
+  
 `
 
 export const ColumnIcon = styled(AiOutlineInsertRowAbove)`
   font-size: 1.5rem;
   cursor: pointer;
-  margin-bottom: -7px;
+
 `
