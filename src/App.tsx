@@ -57,7 +57,6 @@ const App: FC = () => {
     let firstKey: string = Object.keys(data)[0];
     let lastKey: string = Object.keys(data)[Object.keys(data).length - 1];
     for (const item in data) {
-      console.log(item + ":" + parseInt(item) + ":" + getColumnIndex(item.toString().substring(parseInt(item).toString().length, item.length)))
       if(data[item] && parseInt(item) <= parseInt(firstKey) && getColumnIndex(item.toString().substring(parseInt(item).toString().length, item.length)) < getColumnIndex(firstKey.toString().substring(parseInt(firstKey).toString().length, firstKey.length))) {
         firstKey = item
       }
@@ -65,7 +64,6 @@ const App: FC = () => {
         lastKey = item
       }
     }
-    console.log(firstKey, lastKey)
     if(firstKey) {
       const firstRow: number = parseInt(firstKey)
       const firstColumn: string = firstKey.toString().substring(firstRow.toString().length, firstKey.length)
