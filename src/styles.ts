@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { AiOutlineSave, AiFillFolderOpen, AiOutlineReload, AiFillPlayCircle, AiFillBulb, AiFillEdit, AiOutlineHolder } from "react-icons/ai";
+import { AiOutlineSave, AiFillFolderOpen, AiOutlineReload, AiFillPlayCircle, AiFillBulb, AiFillEdit, AiOutlineHolder, AiOutlineInsertRowAbove, AiOutlineInsertRowLeft } from "react-icons/ai";
 
 interface SheetProps {
   numberOfColumns: number;
@@ -68,7 +68,7 @@ export const SaveIcon = styled(AiOutlineSave)`
 `
 
 export const OpenIcon = styled(AiFillFolderOpen)`
-  font-size: 1.7rem;
+  font-size: 1.6rem;
   cursor: pointer;
   margin-bottom: -5px;
 `
@@ -76,13 +76,12 @@ export const OpenIcon = styled(AiFillFolderOpen)`
 export const ResetIcon = styled(AiOutlineReload)`
   font-size: 1.5rem;
   cursor: pointer;
-
 `
 
 export const ChangeIcon = styled(AiFillPlayCircle)`
-  font-size: 1.8rem;
+  font-size: 1.5rem;
   cursor: pointer;
-  margin-left: 10px;
+  margin-left: 0px;
   margin-bottom: -5px;
 `
 
@@ -95,14 +94,6 @@ export const SimpleIcon = styled(AiFillBulb)`
 export const EditFileName = styled(AiFillEdit)`
   font-size: 1.5rem;
   cursor: pointer;
-
-`
-
-export const OpenIconContainer = styled.div`
-  position: absolute;
-  cursor: pointer;
-  top: 5px;
-  left: 2.5rem;
 `
 
 export const InputHidden = styled.input`
@@ -121,7 +112,7 @@ export const InputWrapper = styled.div`
 `;
 
 export const NumberInput = styled.input`
-  margin: 10px;
+  margin: 7px;
   width: 80px;
 `;
 
@@ -157,7 +148,7 @@ export const InputExtensionContainer = styled.div`
 `
 
 export const TextInput = styled.input`
-  width: 40rem;
+  width: calc(100vw - 200px);
 `
 
 export const IndexInput = styled.input`
@@ -170,4 +161,16 @@ export const BarrierIcon = styled(AiOutlineHolder)`
   cursor: pointer;
   margin-bottom: -7px;
   margin-right: 10px;
+`
+
+export const RowIcon = styled(AiOutlineInsertRowLeft)`
+  font-size: 1.5rem;
+  cursor: pointer;
+  margin-bottom: -7px;
+`
+
+export const ColumnIcon = styled(AiOutlineInsertRowAbove)`
+  font-size: 1.5rem;
+  cursor: pointer;
+  margin-bottom: -7px;
 `

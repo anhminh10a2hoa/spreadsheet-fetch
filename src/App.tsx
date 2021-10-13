@@ -1,9 +1,9 @@
 import React, { useState, useRef, useEffect, FC } from 'react';
 import './App.css';
 import { Reset } from 'styled-reset';
-import { AppContainer, InputExtensionContainer, NumberInput, Label, Navbar, Title, IconContainer, SaveIcon, OpenIcon, ResetIcon, SetupContainer, ChangeIcon, SimpleIcon, OpenIconContainer, InputHidden, EditFileName, TextInput, IndexInput, BarrierIcon } from "./styles";
+import { AppContainer, InputExtensionContainer, NumberInput, Label, Navbar, Title, IconContainer, SaveIcon, OpenIcon, ResetIcon, SetupContainer, ChangeIcon, SimpleIcon, InputHidden, EditFileName, TextInput, IndexInput, BarrierIcon, RowIcon, ColumnIcon } from "./styles";
 import Tooltip from '@mui/material/Tooltip';
-import { getColumnIndex } from "./utils/helper";
+import { getColumnIndex, useActiveElement } from "./utils/helper";
 import Sheet from './components/Sheet';
 import IconButton from '@mui/material/IconButton';
 import { DataFormatSave, InputEvent, DownloadFileType } from "./types/types";
@@ -17,20 +17,19 @@ const App: FC = () => {
   const [resetData, setResetData] = useState<number>(0)
   const [fileName, setFileName] = useState<string>("sheet 1")
   const [dataJson, setDataJson] = useState<DataFormatSave | null>(null)
-  const [inputIndex, setInputIndex] = React.useState("");
-  const [textInput, setTextInput] = React.useState("");
+  const [inputIndex, setInputIndex] = React.useState<string>("");
+  const [textInput, setTextInput] = React.useState<string>("");
   const getData = useRef<DataFormatSave>({})
+  const focusedElement = useActiveElement() as HTMLInputElement | null;
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      const active = document.activeElement as HTMLInputElement | null
-      if(active?.classList.contains("cell-input")) {
-        setInputIndex(active.id)
-        setTextInput(active.value)
+    if (focusedElement) {
+      if(focusedElement?.classList.contains("cell-input")) {
+        setInputIndex(focusedElement.id)
+        setTextInput(focusedElement.value)
       }
-    }, 500);
-    return () => clearInterval(interval);
-  }, []);
+    }
+  }, [focusedElement])
 
   const handleChangeNumberOfRows = (event: InputEvent): void => {
     event.preventDefault();
@@ -149,46 +148,41 @@ const App: FC = () => {
       <Navbar>
         <IconContainer>
           <Tooltip title="Save">
-          <IconButton color="inherit" size="medium">
-            <SaveIcon onClick={exportJsonHandler}/>
-          </IconButton>
+            <IconButton color="inherit" size="medium">
+              <SaveIcon onClick={exportJsonHandler}/>
+            </IconButton>
           </Tooltip>
 
           <Tooltip title="Reset">
-          <IconButton color="inherit">
-            <ResetIcon onClick={resetHandler}/>
-          </IconButton>
+            <IconButton color="inherit">
+              <ResetIcon onClick={resetHandler}/>
+            </IconButton>
           </Tooltip>
          
           <Tooltip title="Simple Input Mode">
-          <IconButton color="inherit">
-            <SimpleIcon onClick={simpleHandler}/>
-          </IconButton>
+            <IconButton color="inherit">
+              <SimpleIcon onClick={simpleHandler}/>
+            </IconButton>
           </Tooltip>
           
-         <Tooltip title="Import Json">
-          <IconButton color="inherit">
-            <label htmlFor="file-input">
-              <OpenIcon />
-            </label>
-            <InputHidden id="file-input" type="file" onChange={importJsonHandler} />
-          </IconButton>
+          <Tooltip title="Import Json">
+            <IconButton color="inherit">
+              <label htmlFor="file-input">
+                <OpenIcon />
+              </label>
+              <InputHidden id="file-input" type="file" onChange={importJsonHandler} />
+            </IconButton>
           </Tooltip>
           <Tooltip title="Edit file">
-          <IconButton color="inherit">
-             <EditFileName />
-          </IconButton>
+            <IconButton color="inherit">
+              <EditFileName />
+            </IconButton>
           </Tooltip>
-         
         </IconContainer>
         <SetupContainer>
-          <Label>
-            Rows: 
-          </Label>
+          <RowIcon />
           <NumberInput placeholder="Rows" type="number" value={tempRow} onChange={handleChangeNumberOfRows} />
-          <Label>
-            Columns:
-          </Label>
+          <ColumnIcon />
           <NumberInput placeholder="Columns" type="number" value={tempColumn} onChange={handleChangeNumberOfColumns} />
           <Tooltip title="Change">
           <IconButton color="inherit" size="medium">
@@ -201,7 +195,7 @@ const App: FC = () => {
       <InputExtensionContainer>
         <IndexInput type="text" value={inputIndex} onChange={inputIndexHandler}/>
         <BarrierIcon />
-        <TextInput type="text" value={textInput} onChange={textInputHandler}/>
+        <TextInput type="text" value={textInput} onChange={textInputHandler} id="long-text-input"/>
       </InputExtensionContainer>
       <AppContainer>
         <Reset />

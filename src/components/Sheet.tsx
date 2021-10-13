@@ -19,11 +19,11 @@ interface SheetProps {
 
 type CallbackType = (...args: any) => void
 
+
 const Sheet: React.FC<SheetProps> = ({ numberOfRows, numberOfColumns, getData, simpleRowAndColumn, resetData, dataJson, textInput, inputIndex }) => {
   const [data, setData] = useState<DataFormatSave>({});
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const tableElement = useRef(null);
-
 
   useEffect(() => {
     if(data) {
@@ -86,6 +86,9 @@ const Sheet: React.FC<SheetProps> = ({ numberOfRows, numberOfColumns, getData, s
       } else {
         const newData: DataFormatSave = { ...data };
         newData[`${row}${column}`] = value;
+        if(document.getElementById('long-text-input')) {
+          (document.getElementById('long-text-input') as any).value = value;
+        }
         setData(newData);
       }
     },

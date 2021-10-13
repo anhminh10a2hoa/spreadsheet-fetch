@@ -1,3 +1,5 @@
+import React from "react";
+
 export const getColumnName: (index: number) => string = (index) => {
   let subIndex: string = ''
   let i: number = index
@@ -14,4 +16,21 @@ export const getColumnIndex: (character: string) => number = (character) => {
     subIndex = parseInt(character.substr(1, character.length - 1))
   }
   return character.charCodeAt(0) - 64 + subIndex * 26
+}
+
+export const useActiveElement = () => {
+  const [active, setActive] = React.useState(document.activeElement);
+  
+  const handleFocusIn = (e: any) => {
+    setActive(document.activeElement);
+  }
+  
+  React.useEffect(() => {
+    document.addEventListener('focusin', handleFocusIn)
+    return () => {
+      document.removeEventListener('focusin', handleFocusIn)
+  };
+  }, [])
+  
+  return active;
 }
