@@ -57,7 +57,7 @@ export const Title = styled.p`
 
 export const IconContainer = styled.div`
   position: absolute;
-  top: 5px;
+  top: 2px;
   left: 5px;
 `
 

@@ -121,7 +121,6 @@ const Sheet: React.FC<SheetProps> = ({ numberOfRows, numberOfColumns, getData, s
   const computeCell = useCallback<CallbackType>(
     ({ row, column }: CellValueType) => {
       const cellContent: string | undefined = data[`${row}${column}`];
-      console.log(cellContent)
       if (cellContent) {
         if (cellContent?.charAt(0) === "=") {
           // This regex converts = "A1+A2" to ["A1","+","A2"]
