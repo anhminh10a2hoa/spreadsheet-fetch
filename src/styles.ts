@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { AiOutlineSave, AiFillFolderOpen, AiOutlineReload, AiFillPlayCircle, AiFillBulb, AiFillEdit, AiOutlineHolder, AiOutlineInsertRowAbove, AiOutlineInsertRowLeft } from "react-icons/ai";
+import { AiOutlineSave, AiFillFolderOpen, AiOutlineReload, AiFillPlayCircle, AiFillBulb, AiFillEdit, AiOutlineHolder, AiOutlineInsertRowAbove, AiOutlineInsertRowLeft, AiFillGithub } from "react-icons/ai";
 
 interface SheetProps {
   numberOfColumns: number;
@@ -166,11 +166,14 @@ export const BarrierIcon = styled(AiOutlineHolder)`
 export const RowIcon = styled(AiOutlineInsertRowLeft)`
   font-size: 1.5rem;
   cursor: pointer;
-  
 `
 
 export const ColumnIcon = styled(AiOutlineInsertRowAbove)`
   font-size: 1.5rem;
   cursor: pointer;
+`
 
+export const GithubIcon = styled(AiFillGithub)`
+  font-size: 1.5rem;
+  cursor: pointer;
 `

@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, FC } from 'react';
 import './App.css';
 import { Reset } from 'styled-reset';
-import { AppContainer, InputExtensionContainer, NumberInput, Navbar, Title, IconContainer, SaveIcon, OpenIcon, ResetIcon, SetupContainer, ChangeIcon, SimpleIcon, InputHidden, EditFileName, TextInput, IndexInput, BarrierIcon, RowIcon, ColumnIcon } from "./styles";
+import { AppContainer, InputExtensionContainer, NumberInput, Navbar, Title, IconContainer, SaveIcon, OpenIcon, ResetIcon, SetupContainer, ChangeIcon, SimpleIcon, InputHidden, EditFileName, TextInput, IndexInput, BarrierIcon, RowIcon, ColumnIcon, GithubIcon } from "./styles";
 import Tooltip from '@mui/material/Tooltip';
 import { getColumnIndex, useActiveElement } from "./utils/helper";
 import Sheet from './components/Sheet';
@@ -143,6 +143,13 @@ const App: FC = () => {
     //empty
   }
 
+  const githubHandler = () => {
+    window.open(
+      'https://github.com/anhminh10a2hoa/spreadsheet-fetch',
+      '_blank'
+    );
+  }
+
   return (
     <React.Fragment> 
       <Navbar>
@@ -173,11 +180,19 @@ const App: FC = () => {
               <InputHidden id="file-input" type="file" onChange={importJsonHandler} />
             </IconButton>
           </Tooltip>
+
           <Tooltip title="Edit file">
             <IconButton color="inherit">
               <EditFileName />
             </IconButton>
           </Tooltip>
+
+          <Tooltip title="Github link">
+            <IconButton color="inherit">
+              <GithubIcon onClick={githubHandler}/>
+            </IconButton>
+          </Tooltip>
+
         </IconContainer>
         <SetupContainer>
           <Tooltip title="Number of rows: ">
