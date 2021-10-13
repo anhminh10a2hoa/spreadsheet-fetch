@@ -8,7 +8,6 @@ interface SheetProps {
 export const Sheet = styled.div`
   
   overflow: auto;
-  resize: both;
   display: grid;
   grid-template-columns: 32px repeat(
       ${(props: SheetProps) => props.numberOfColumns - 1},
