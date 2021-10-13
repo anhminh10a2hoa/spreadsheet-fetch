@@ -65,8 +65,8 @@ const App: FC = () => {
         'startRow':firstRow - 1,
         'startCol':getColumnIndex(firstColumn) - getColumnIndex('A')
       })
-      const startRow = lastRow - firstRow === 0 ? 2 : lastRow - firstRow + 2
-      const startCol = getColumnIndex(lastColumn) - getColumnIndex(firstColumn) === 0 ? 2 : getColumnIndex(lastColumn) - getColumnIndex(firstColumn) + 2
+      const startRow = lastRow - firstRow === 0 ? 2 : lastRow - firstRow + 1
+      const startCol = getColumnIndex(lastColumn) - getColumnIndex(firstColumn) === 0 ? 2 : getColumnIndex(lastColumn) - getColumnIndex(firstColumn) + 1
       if(numberOfRows !== startRow) {
         setNumberOfRows(startRow)
         setTempRow(startRow - 1)
