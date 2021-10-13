@@ -139,7 +139,7 @@ export const Input = styled.input`
 export const AppContainer = styled.div`
   max-width: 100vw;
   overflow: auto;
-  height: calc(100vh - 123px);
+  height: calc(100vh - 133px);
 `
 
 export const InputExtensionContainer = styled.div`
