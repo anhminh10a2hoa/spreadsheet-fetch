@@ -91,9 +91,9 @@ const App: FC = () => {
   const resetHandler = ():void => {
     const times: number = resetData + 1
     setResetData(times)
-    setNumberOfRows(31)
+    setNumberOfRows(30)
     setTempRow(30)
-    setNumberOfColumns(31)
+    setNumberOfColumns(30)
     setTempColumn(30)
   }
 
