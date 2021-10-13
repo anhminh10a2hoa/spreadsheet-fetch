@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, FC } from 'react';
 import './App.css';
 import { Reset } from 'styled-reset';
-import { AppContainer, InputExtensionContainer, NumberInput, Label, Navbar, Title, IconContainer, SaveIcon, OpenIcon, ResetIcon, SetupContainer, ChangeIcon, SimpleIcon, InputHidden, EditFileName, TextInput, IndexInput, BarrierIcon, RowIcon, ColumnIcon } from "./styles";
+import { AppContainer, InputExtensionContainer, NumberInput, Navbar, Title, IconContainer, SaveIcon, OpenIcon, ResetIcon, SetupContainer, ChangeIcon, SimpleIcon, InputHidden, EditFileName, TextInput, IndexInput, BarrierIcon, RowIcon, ColumnIcon } from "./styles";
 import Tooltip from '@mui/material/Tooltip';
 import { getColumnIndex, useActiveElement } from "./utils/helper";
 import Sheet from './components/Sheet';

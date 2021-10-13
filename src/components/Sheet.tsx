@@ -22,7 +22,6 @@ type CallbackType = (...args: any) => void
 
 const Sheet: React.FC<SheetProps> = ({ numberOfRows, numberOfColumns, getData, simpleRowAndColumn, resetData, dataJson, textInput, inputIndex }) => {
   const [data, setData] = useState<DataFormatSave>({});
-  const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const tableElement = useRef(null);
 
   useEffect(() => {
@@ -63,7 +62,7 @@ const Sheet: React.FC<SheetProps> = ({ numberOfRows, numberOfColumns, getData, s
     setData(newData)
   }, [simpleRowAndColumn])
 
-  const setCellValue = React.useCallback<CallbackType>(
+  const setCellValue = useCallback<CallbackType>(
     ({ row, column, value }: CellValueType) => {
       if(typeof value === 'string' && value.includes("fetch('") && value.includes("')")) {
         const query: Array<string> = value.split("fetch('")
@@ -95,19 +94,16 @@ const Sheet: React.FC<SheetProps> = ({ numberOfRows, numberOfColumns, getData, s
     [data, setData]
   );
 
-  const setCellValueByIndex = React.useCallback<CallbackType>(
+  const setCellValueByIndex = useCallback<CallbackType>(
     ({ inputIndex, value }: CellValueTypeByIndex) => {
       if(typeof value === 'string' && value.includes("fetch('") && value.includes("')")) {
         const query: Array<string> = value.split("fetch('")
         axios.get(`${process.env.REACT_APP_PROJECT_WARE_SPARQL}&query=${query[1].substr(0, query[1].length - 2)}`).then((res) => {
           if(Array.isArray(res.data.results.bindings)) {
             const fetchData: DataFormatSave = { ...data };
-            for (const [index, element] of res.data.results.bindings.entries()) {
-              // fetchData[`${parseInt(columnStart)}${getColumnName(1 + index)}`] = 
-              let i = 0;
+            for (const element of res.data.results.bindings.entries()) {
               for (const prop in element) {
                 fetchData[`${inputIndex}`] = element[prop].value
-                i++;
               }
             }
             setData(fetchData);
@@ -122,7 +118,7 @@ const Sheet: React.FC<SheetProps> = ({ numberOfRows, numberOfColumns, getData, s
     [data, setData]
   );
 
-  const computeCell = React.useCallback<CallbackType>(
+  const computeCell = useCallback<CallbackType>(
     ({ row, column }: CellValueType) => {
       const cellContent: string | undefined = data[`${row}${column}`];
       if (cellContent) {
@@ -156,10 +152,9 @@ const Sheet: React.FC<SheetProps> = ({ numberOfRows, numberOfColumns, getData, s
     [data]
   );
 
-  const mouseDown = (index: number) => {
-    setActiveIndex(index);
-  };
-
+  // const mouseDown = (index: number) => {
+  //   setActiveIndex(index);
+  // };
 
   //  const mouseMove = (e: any) => {
   //    //
