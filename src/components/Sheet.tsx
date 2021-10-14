@@ -23,6 +23,7 @@ type CallbackType = (...args: any) => void
 const Sheet: React.FC<SheetProps> = ({ numberOfRows, numberOfColumns, getData, simpleRowAndColumn, resetData, dataJson, textInput, inputIndex }) => {
   const [data, setData] = useState<DataFormatSave>({});
   const tableElement = useRef(null);
+  const sparqlUrl = import.meta.env.VITE_PROJECT_WARE_SPARQL
 
   useEffect(() => {
     if(data) {
@@ -66,7 +67,7 @@ const Sheet: React.FC<SheetProps> = ({ numberOfRows, numberOfColumns, getData, s
     ({ row, column, value }: CellValueType) => {
       if(typeof value === 'string' && value.includes("fetch('") && value.includes("')")) {
         const query: Array<string> = value.split("fetch('")
-        axios.get(`${process.env.REACT_APP_PROJECT_WARE_SPARQL}&query=${query[1].substr(0, query[1].length - 2)}`).then((res) => {
+        axios.get(`${sparqlUrl}&query=${query[1].substr(0, query[1].length - 2)}`).then((res) => {
           if(Array.isArray(res.data.results.bindings)) {
             const fetchData: DataFormatSave = { ...data };
             for (const [index, element] of res.data.results.bindings.entries()) {
@@ -98,7 +99,7 @@ const Sheet: React.FC<SheetProps> = ({ numberOfRows, numberOfColumns, getData, s
     ({ inputIndex, value }: CellValueTypeByIndex) => {
       if(typeof value === 'string' && value.includes("fetch('") && value.includes("')")) {
         const query: Array<string> = value.split("fetch('")
-        axios.get(`${process.env.REACT_APP_PROJECT_WARE_SPARQL}&query=${query[1].substr(0, query[1].length - 2)}`).then((res) => {
+        axios.get(`${sparqlUrl}&query=${query[1].substr(0, query[1].length - 2)}`).then((res) => {
           if(Array.isArray(res.data.results.bindings)) {
             const fetchData: DataFormatSave = { ...data };
             for (const element of res.data.results.bindings.entries()) {

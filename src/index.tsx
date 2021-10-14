@@ -6,6 +6,19 @@ import reportWebVitals from './reportWebVitals';
 import { Provider } from 'react-redux';
 import { store } from './redux/store'
 
+declare global {
+  interface ImportMeta {
+    hot: {
+      accept: Function;
+      dispose: Function;
+    };
+    env: {
+      MODE: string;
+      VITE_PROJECT_WARE_SPARQL: string;
+    };
+  }
+}
+
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
