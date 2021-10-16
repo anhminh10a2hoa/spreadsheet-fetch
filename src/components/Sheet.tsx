@@ -6,9 +6,9 @@ import { getColumnName, getColumnIndex } from "../utils/helper";
 import Cell from "./Cell";
 
 import { CellValueType, DataFormatSave, CellValueTypeByIndex } from "../types/types";
+import { NotesState } from "../redux/sheetReducer";
+import { useSelector } from "react-redux";
 interface SheetProps {
-  numberOfRows: number;
-  numberOfColumns: number;
   getData: any;
   resetData: number;
   simpleRowAndColumn: DataFormatSave;
@@ -19,8 +19,9 @@ interface SheetProps {
 
 type CallbackType = (...args: any) => void
 
-
-const Sheet: React.FC<SheetProps> = ({ numberOfRows, numberOfColumns, getData, simpleRowAndColumn, resetData, dataJson, textInput, inputIndex }) => {
+const Sheet: React.FC<SheetProps> = ({ getData, simpleRowAndColumn, resetData, dataJson, textInput, inputIndex }) => {
+  const row = useSelector((state: NotesState) => state.row);
+  const column = useSelector((state: NotesState) => state.column);
   const [data, setData] = useState<DataFormatSave>({});
   const tableElement = useRef(null);
   const sparqlUrl = import.meta.env.VITE_PROJECT_WARE_SPARQL
@@ -151,50 +152,18 @@ const Sheet: React.FC<SheetProps> = ({ numberOfRows, numberOfColumns, getData, s
     [data]
   );
 
-  // const mouseDown = (index: number) => {
-  //   setActiveIndex(index);
-  // };
-
-  //  const mouseMove = (e: any) => {
-  //    //
-  //  }
-
-  // const removeListeners = useCallback(() => {
-  //   window.removeEventListener("mousemove", mouseMove);
-  //   window.removeEventListener("mouseup", removeListeners);
-  // }, [mouseMove]);
-
-  // const mouseUp = useCallback(() => {
-  //   setActiveIndex(null);
-  //   removeListeners();
-  // }, [setActiveIndex, removeListeners]);
-
-  // useEffect(() => {
-  //   if (activeIndex !== null) {
-  //     window.addEventListener("mousemove", mouseMove);
-  //     window.addEventListener("mouseup", mouseUp);
-  //   }
-
-  //   return () => {
-  //     removeListeners();
-  //   };
-  // }, [activeIndex, mouseMove, mouseUp, removeListeners]);
-
-
   return (
-    <StyledSheet numberOfColumns={numberOfColumns} ref={tableElement}>
-      {Array(numberOfRows)
+    <StyledSheet numberOfColumns={column} ref={tableElement}>
+      {Array(row)
         .fill(0)
         .map((_, i: number) => {
           return (
             <Fragment key={i}>
-              {Array(numberOfColumns)
+              {Array(column)
                 .fill(0)
                 .map((_, j: number) => {
                   const columnName: string = getColumnName(j);
                   return (
-                    <>
-                    
                     <Cell
                       rowIndex={i}
                       columnIndex={j}
@@ -203,12 +172,7 @@ const Sheet: React.FC<SheetProps> = ({ numberOfRows, numberOfColumns, getData, s
                       currentValue={data[`${i}${columnName}`]}
                       computeCell={computeCell}
                       key={`${columnName}${i}`}
-                      numOfCol={numberOfColumns}
-                      numOfRow={numberOfRows}
-                      //onMouseDown={() => mouseDown(i)}
                     />
-                   
-                    </>
                   );
                 })}
             </Fragment>

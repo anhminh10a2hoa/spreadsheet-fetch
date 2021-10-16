@@ -1,4 +1,6 @@
 import React, { useState, memo } from "react";
+import { useSelector } from "react-redux";
+import { NotesState } from "../redux/sheetReducer";
 import { Input, Header } from "../styles";
 import { getColumnName } from "../utils/helper";
 
@@ -11,8 +13,6 @@ interface CellProps {
   // type check
   computeCell: (...args: any) => void;
   currentValue: number;
-  numOfCol: number;
-  numOfRow: number;
 }
 
 enum KeyCode {
@@ -31,9 +31,9 @@ const Cell: React.FC<CellProps> = ({
   setCellValue,
   computeCell,
   currentValue,
-  numOfCol,
-  numOfRow,
 }) => {
+  const row = useSelector((state: NotesState) => state.row);
+  const column = useSelector((state: NotesState) => state.column);
   const [edit, setEdit] = useState<boolean>(false);
 
   const value = React.useMemo<any>(() => {
@@ -63,7 +63,7 @@ const Cell: React.FC<CellProps> = ({
 
       if(eventKey === KeyCode.DOWN){
         let newRowIndex = rowIndex + 1;
-        if(newRowIndex < numOfRow)
+        if(newRowIndex < row)
           afterInputId = newRowIndex + columnName; 
         else 
           endOfSheet = true;
@@ -84,7 +84,7 @@ const Cell: React.FC<CellProps> = ({
 
       }else if (eventKey === KeyCode.RIGHT){
         let newColumnName = getColumnName(columnIndex + 1);
-        if(columnIndex < numOfCol-1)
+        if(columnIndex < column - 1)
           afterInputId = rowIndex + newColumnName;
         else
           endOfSheet = true;

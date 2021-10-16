@@ -7,12 +7,16 @@ import { getColumnIndex, useActiveElement } from "./utils/helper";
 import Sheet from './components/Sheet';
 import IconButton from '@mui/material/IconButton';
 import { DataFormatSave, InputEvent, DownloadFileType } from "./types/types";
+import { useDispatch, useSelector } from 'react-redux';
+import { NotesState } from './redux/sheetReducer';
+import { changeRowAndColumn } from './redux/actions';
 
 const App: FC = () => {
-  const [numberOfRows, setNumberOfRows] = useState<number>(30)
-  const [numberOfColumns, setNumberOfColumns] = useState<number>(30)
-  const [tempRow, setTempRow] = useState<number>(numberOfRows)
-  const [tempColumn, setTempColumn] = useState<number>(numberOfColumns)
+  const dispatch = useDispatch();
+  const row = useSelector((state: NotesState) => state.row);
+  const column = useSelector((state: NotesState) => state.column);
+  const [tempRow, setTempRow] = useState<number>(row - 1)
+  const [tempColumn, setTempColumn] = useState<number>(column - 1)
   const [simpleRowAndColumn, setSimpleRowAndColumn] = useState<DataFormatSave>({})
   const [resetData, setResetData] = useState<number>(0)
   const [fileName, setFileName] = useState<string>("sheet 1")
@@ -31,7 +35,7 @@ const App: FC = () => {
     }
   }, [focusedElement])
 
-  const handleChangeNumberOfRows = (event: InputEvent): void => {
+  const handleChangerows = (event: InputEvent): void => {
     event.preventDefault();
     const row: number = parseInt(event.target.value)
     setTempRow(row)
@@ -47,8 +51,7 @@ const App: FC = () => {
     if(tempRow < 2 || tempColumn < 2) {
       alert('Column and Row must be greater than 2')
     } else {
-      setNumberOfRows(tempRow)
-      setNumberOfColumns(tempColumn)
+      dispatch(changeRowAndColumn({row: tempRow, column: tempColumn}))
     }
   }
 
@@ -75,12 +78,9 @@ const App: FC = () => {
       })
       const startRow = lastRow - firstRow === 0 ? 2 : lastRow - firstRow + 1
       const startCol = getColumnIndex(lastColumn) - getColumnIndex(firstColumn) === 0 ? 2 : getColumnIndex(lastColumn) - getColumnIndex(firstColumn) + 1
-      if(numberOfRows !== startRow) {
-        setNumberOfRows(startRow)
+      if(row !== startRow || column !== startCol) {
+        dispatch(changeRowAndColumn({row: tempRow, column: tempColumn}))
         setTempRow(startRow - 1)
-      }
-      if(numberOfColumns !== startCol) {
-        setNumberOfColumns(startCol)
         setTempColumn(startCol - 1)
       }
     }
@@ -89,9 +89,8 @@ const App: FC = () => {
   const resetHandler = ():void => {
     const times: number = resetData + 1
     setResetData(times)
-    setNumberOfRows(30)
+    dispatch(changeRowAndColumn({row: 30, column: 30}))
     setTempRow(30)
-    setNumberOfColumns(30)
     setTempColumn(30)
   }
 
@@ -208,7 +207,7 @@ const App: FC = () => {
                <RowIcon />
             </IconButton>
           </Tooltip>
-          <NumberInput placeholder="Rows" type="number" value={tempRow} onChange={handleChangeNumberOfRows} />
+          <NumberInput placeholder="Rows" type="number" value={tempRow} onChange={handleChangerows} />
            <Tooltip title="Number of columns: ">
             <IconButton color="inherit">
                <ColumnIcon /> 
@@ -230,7 +229,7 @@ const App: FC = () => {
       </InputExtensionContainer>
       <AppContainer>
         <Reset />
-        <Sheet numberOfRows={numberOfRows + 1} numberOfColumns={numberOfColumns + 1} getData={getData} resetData={resetData} simpleRowAndColumn={simpleRowAndColumn} dataJson={dataJson} inputIndex={inputIndex} textInput={textInput}/>
+        <Sheet getData={getData} resetData={resetData} simpleRowAndColumn={simpleRowAndColumn} dataJson={dataJson} inputIndex={inputIndex} textInput={textInput}/>
       </AppContainer>
     </React.Fragment>
   );

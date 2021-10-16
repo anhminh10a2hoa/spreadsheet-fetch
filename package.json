@@ -33,7 +33,7 @@
     "vite-plugin-svgr": "^0.3.0"
   },
   "scripts": {
-    "start": "vite",
+    "start": "vite --host",
     "build": "vite build"
   },
   "eslintConfig": {

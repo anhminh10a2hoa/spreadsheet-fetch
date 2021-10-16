@@ -5,7 +5,7 @@ type ChangeRowColumn = {
   column: number;
 }
 
-export const addNote = (rowAndColumn: ChangeRowColumn): Action => ({
+export const changeRowAndColumn = (rowAndColumn: ChangeRowColumn): Action => ({
   type: "CHANGE_ROW_AND_COLUMN",
   payload: rowAndColumn,
 });
