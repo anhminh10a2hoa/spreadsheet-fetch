@@ -4,16 +4,15 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { Provider } from 'react-redux';
-import { store } from './redux/store'
+import { store } from './redux/store';
 
 declare global {
   interface ImportMeta {
-    hot: {
-      accept: Function;
-      dispose: Function;
-    };
     env: {
-      MODE: string;
+      GITHUB_AUTH_TOKEN: string;
+      NODE_ENV: 'development' | 'production';
+      PORT?: string;
+      PWD: string;
       VITE_PROJECT_WARE_SPARQL: string;
     };
   }

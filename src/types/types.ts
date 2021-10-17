@@ -1,22 +1,22 @@
 export type DataFormatSave = {
-  [key:string]: number | string | any;
-}
+  [key: string]: number | string | any;
+};
 
-export type InputEvent = React.ChangeEvent<HTMLInputElement>
+export type InputEvent = React.ChangeEvent<HTMLInputElement>;
 
 export type DownloadFileType = {
-  data: BlobPart,
-  fileName: string,
-  fileType: string
-}
+  data: BlobPart;
+  fileName: string;
+  fileType: string;
+};
 
 export type CellValueType = {
   row: number;
   column: string;
   value?: number | string;
-}
+};
 
 export type CellValueTypeByIndex = {
   inputIndex: string;
   value?: number | string;
-}
+};
