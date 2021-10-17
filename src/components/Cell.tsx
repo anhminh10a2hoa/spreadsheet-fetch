@@ -19,7 +19,8 @@ enum KeyCode {
   UP = "ArrowUp",
   DOWN = "ArrowDown",
   LEFT = "ArrowLeft",
-  RIGHT = "ArrowRight"
+  RIGHT = "ArrowRight",
+  ENTER = "Enter"
 }
 
 type CallbackType = (...args: any) => void
@@ -56,12 +57,12 @@ const Cell: React.FC<CellProps> = ({
 
   function keyDownEvent(event: React.KeyboardEvent<HTMLInputElement>){
     let eventKey: string = event.key;
-    if(eventKey === KeyCode.DOWN || eventKey === KeyCode.UP || eventKey === KeyCode.LEFT || eventKey === KeyCode.RIGHT){
+    if(eventKey === KeyCode.DOWN || eventKey === KeyCode.UP || eventKey === KeyCode.LEFT || eventKey === KeyCode.RIGHT || eventKey === KeyCode.ENTER){
       let currentInputId: string = rowIndex+columnName;
       let afterInputId: string = "";
       let endOfSheet: boolean = false;
 
-      if(eventKey === KeyCode.DOWN){
+      if(eventKey === KeyCode.DOWN || eventKey === KeyCode.ENTER){
         let newRowIndex = rowIndex + 1;
         if(newRowIndex < numOfRow)
           afterInputId = newRowIndex + columnName; 

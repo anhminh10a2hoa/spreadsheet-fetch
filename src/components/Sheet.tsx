@@ -125,7 +125,7 @@ const Sheet: React.FC<SheetProps> = ({ numberOfRows, numberOfColumns, getData, s
       if (cellContent) {
         if (cellContent?.charAt(0) === "=") {
           // This regex converts = "A1+A2" to ["A1","+","A2"]
-          const expression: Array<string> = cellContent.substr(1).split(/([+*-\/])/g);
+          const expression: Array<string> = cellContent.replaceAll(' ','').substr(1).split(/([+*-\/])/g);
           let subStitutedExpression: string = "";
           expression.forEach((item:any) => {
             // Regex to test if it is of form alphabet followed by number ex: A1
