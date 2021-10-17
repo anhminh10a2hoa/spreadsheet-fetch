@@ -29,13 +29,13 @@ import Sheet from './components/Sheet';
 import IconButton from '@mui/material/IconButton';
 import { DataFormatSave, InputEvent, DownloadFileType } from './types/types';
 import { useDispatch, useSelector } from 'react-redux';
-import { NotesState } from './redux/sheetReducer';
+import { SheetState } from './redux/sheetReducer';
 import { changeRowAndColumn } from './redux/actions';
 
 const App: FC = () => {
   const dispatch = useDispatch();
-  const row = useSelector((state: NotesState) => state.row);
-  const column = useSelector((state: NotesState) => state.column);
+  const row = useSelector((state: SheetState) => state.row);
+  const column = useSelector((state: SheetState) => state.column);
   const [tempRow, setTempRow] = useState<number>(row - 1);
   const [tempColumn, setTempColumn] = useState<number>(column - 1);
   const [simpleRowAndColumn, setSimpleRowAndColumn] = useState<DataFormatSave>({});
@@ -113,7 +113,7 @@ const App: FC = () => {
           ? 2
           : getColumnIndex(lastColumn) - getColumnIndex(firstColumn) + 1;
       if (row !== startRow || column !== startCol) {
-        dispatch(changeRowAndColumn({ row: tempRow, column: tempColumn }));
+        dispatch(changeRowAndColumn({ row: startRow - 1, column: startCol - 1 }));
         setTempRow(startRow - 1);
         setTempColumn(startCol - 1);
       }
@@ -121,9 +121,9 @@ const App: FC = () => {
   };
 
   const resetHandler = (): void => {
-    dispatch(changeRowAndColumn({ row: 30, column: 30 }));
-    setTempRow(31);
-    setTempColumn(31);
+    dispatch(changeRowAndColumn({ row: 31, column: 31 }));
+    setTempRow(30);
+    setTempColumn(30);
   };
 
   const downloadFile = ({ data, fileName, fileType }: DownloadFileType) => {

@@ -6,7 +6,7 @@ import { getColumnName, getColumnIndex } from '../utils/helper';
 import Cell from './Cell';
 
 import { CellValueType, DataFormatSave, CellValueTypeByIndex } from '../types/types';
-import { NotesState } from '../redux/sheetReducer';
+import { SheetState } from '../redux/sheetReducer';
 import { useSelector } from 'react-redux';
 interface SheetProps {
   getData: any;
@@ -19,8 +19,8 @@ interface SheetProps {
 type CallbackType = (...args: any) => void;
 
 const Sheet: React.FC<SheetProps> = ({ getData, simpleRowAndColumn, dataJson, textInput, inputIndex }) => {
-  const row = useSelector((state: NotesState) => state.row);
-  const column = useSelector((state: NotesState) => state.column);
+  const row = useSelector((state: SheetState) => state.row);
+  const column = useSelector((state: SheetState) => state.column);
   const [data, setData] = useState<DataFormatSave>({});
   const tableElement = useRef(null);
   const sparqlUrl = import.meta.env.VITE_PROJECT_WARE_SPARQL;
