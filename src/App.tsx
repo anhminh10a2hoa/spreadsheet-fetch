@@ -71,7 +71,7 @@ const App: FC = () => {
     if (tempRow < 2 || tempColumn < 2) {
       alert('Column and Row must be greater than 2');
     } else {
-      dispatch(changeRowAndColumn({ row: tempRow, column: tempColumn }));
+      dispatch(changeRowAndColumn({ row: tempRow + 1, column: tempColumn + 1 }));
     }
   };
 
@@ -122,8 +122,8 @@ const App: FC = () => {
 
   const resetHandler = (): void => {
     dispatch(changeRowAndColumn({ row: 30, column: 30 }));
-    setTempRow(30);
-    setTempColumn(30);
+    setTempRow(31);
+    setTempColumn(31);
   };
 
   const downloadFile = ({ data, fileName, fileType }: DownloadFileType) => {

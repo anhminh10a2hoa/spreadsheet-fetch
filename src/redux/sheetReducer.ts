@@ -6,8 +6,9 @@ export interface NotesState {
 }
 
 const initialState = {
-  row: localStorage.getItem('row') ? parseInt(localStorage.getItem('row')!) : 31,
-  column: localStorage.getItem('column') ? parseInt(localStorage.getItem('column')!) : 31
+  row: JSON.parse(localStorage.getItem('row') || '') === '' ? 31 : JSON.parse(localStorage.getItem('row') || ''),
+  column:
+    JSON.parse(localStorage.getItem('column') || '') === '' ? 31 : JSON.parse(localStorage.getItem('column') || '')
 };
 
 export const sheetReducer = (state: NotesState = initialState, action: Action) => {
