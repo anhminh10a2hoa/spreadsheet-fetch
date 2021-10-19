@@ -24,26 +24,27 @@ import {
   GithubIcon
 } from './styles';
 import Tooltip from '@mui/material/Tooltip';
-import { getColumnIndex, useActiveElement } from './utils/helper';
+import { getColumnIndex, getColumnName, useActiveElement } from './utils/helper';
 import Sheet from './components/Sheet';
 import IconButton from '@mui/material/IconButton';
-import { DataFormatSave, InputEvent, DownloadFileType } from './types/types';
+import { InputEvent, DownloadFileType, DataSheet } from './types/types';
 import { useDispatch, useSelector } from 'react-redux';
-import { SheetState } from './redux/sheetReducer';
-import { changeRowAndColumn } from './redux/actions';
+import { Data } from './redux/sheetReducer';
+import { changeRowAndColumn, setData } from './redux/actions';
 
 const App: FC = () => {
   const dispatch = useDispatch();
-  const row = useSelector((state: SheetState) => state.row);
-  const column = useSelector((state: SheetState) => state.column);
+  const sheetIndex = 0;
+  const row = useSelector((state: Data) => state.data[sheetIndex].row);
+  const column = useSelector((state: Data) => state.data[sheetIndex].column);
+  const data = useSelector((state: Data) => state.data[sheetIndex].dataSheet);
   const [tempRow, setTempRow] = useState<number>(row - 1);
   const [tempColumn, setTempColumn] = useState<number>(column - 1);
-  const [simpleRowAndColumn, setSimpleRowAndColumn] = useState<DataFormatSave>({});
   const [fileName] = useState<string>('sheet 1');
-  const [dataJson, setDataJson] = useState<DataFormatSave | null>(null);
+  const [dataJson, setDataJson] = useState<DataSheet | null>(null);
   const [inputIndex, setInputIndex] = React.useState<string>('');
   const [textInput, setTextInput] = React.useState<string>('');
-  const getData = useRef<DataFormatSave>({});
+  const getData = useRef<DataSheet>({});
   const focusedElement = useActiveElement() as HTMLInputElement | null;
 
   useEffect(() => {
@@ -71,27 +72,26 @@ const App: FC = () => {
     if (tempRow < 2 || tempColumn < 2) {
       alert('Column and Row must be greater than 2');
     } else {
-      dispatch(changeRowAndColumn({ row: tempRow + 1, column: tempColumn + 1 }));
+      dispatch(changeRowAndColumn(sheetIndex, { row: tempRow + 1, column: tempColumn + 1 }));
     }
   };
 
   const simpleHandler = (): void => {
-    const data: DataFormatSave = getData.current;
     let firstKey: string = Object.keys(data)[0];
     let lastKey: string = Object.keys(data)[Object.keys(data).length - 1];
     for (const item in data) {
       if (
-        data[item] &&
+        data[item] !== '' &&
         parseInt(item) <= parseInt(firstKey) &&
-        getColumnIndex(item.toString().substring(parseInt(item).toString().length, item.length)) <
+        getColumnIndex(item.toString().substring(parseInt(item).toString().length, item.length)) <=
           getColumnIndex(firstKey.toString().substring(parseInt(firstKey).toString().length, firstKey.length))
       ) {
         firstKey = item;
       }
       if (
-        data[item] &&
+        data[item] !== '' &&
         parseInt(item) >= parseInt(lastKey) &&
-        getColumnIndex(item.toString().substring(parseInt(item).toString().length, item.length)) >
+        getColumnIndex(item.toString().substring(parseInt(item).toString().length, item.length)) >=
           getColumnIndex(lastKey.toString().substring(parseInt(lastKey).toString().length, lastKey.length))
       ) {
         lastKey = item;
@@ -103,17 +103,21 @@ const App: FC = () => {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const lastRow: number = parseInt(lastKey.match(/^\d+|\d+\b|\d+(?=\w)/g)![0]);
       const lastColumn: string = lastKey.toString().substring(lastRow.toString().length, lastKey.length);
-      setSimpleRowAndColumn({
-        startRow: firstRow - 1,
-        startCol: getColumnIndex(firstColumn) - getColumnIndex('A')
-      });
+      const newData: DataSheet = {};
+      for (const item in data) {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        const row = parseInt(item.match(/^\d+|\d+\b|\d+(?=\w)/g)![0]);
+        const column = item.toString().substring(row.toString().length, item.length);
+        newData[`${row - firstRow + 1}${getColumnName(getColumnIndex(column) - getColumnIndex('A') - 1)}`] = data[item];
+      }
+      dispatch(setData(sheetIndex, newData));
       const startRow = lastRow - firstRow === 0 ? 2 : lastRow - firstRow + 1;
       const startCol =
         getColumnIndex(lastColumn) - getColumnIndex(firstColumn) === 0
           ? 2
           : getColumnIndex(lastColumn) - getColumnIndex(firstColumn) + 1;
       if (row !== startRow || column !== startCol) {
-        dispatch(changeRowAndColumn({ row: startRow - 1, column: startCol - 1 }));
+        dispatch(changeRowAndColumn(sheetIndex, { row: startRow, column: startCol }));
         setTempRow(startRow - 1);
         setTempColumn(startCol - 1);
       }
@@ -121,7 +125,7 @@ const App: FC = () => {
   };
 
   const resetHandler = (): void => {
-    dispatch(changeRowAndColumn({ row: 31, column: 31 }));
+    dispatch(changeRowAndColumn(sheetIndex, { row: 31, column: 31 }));
     setTempRow(30);
     setTempColumn(30);
   };
@@ -145,7 +149,7 @@ const App: FC = () => {
 
   const exportJsonHandler = (event: React.MouseEvent<any>): void => {
     event.preventDefault();
-    const data: DataFormatSave = getData.current;
+    const data: DataSheet = getData.current;
     downloadFile({
       data: JSON.stringify(data),
       fileName: fileName + '.json',
@@ -255,13 +259,7 @@ const App: FC = () => {
       </InputExtensionContainer>
       <AppContainer>
         <Reset />
-        <Sheet
-          getData={getData}
-          simpleRowAndColumn={simpleRowAndColumn}
-          dataJson={dataJson}
-          inputIndex={inputIndex}
-          textInput={textInput}
-        />
+        <Sheet getData={getData} dataJson={dataJson} inputIndex={inputIndex} textInput={textInput} />
       </AppContainer>
     </React.Fragment>
   );

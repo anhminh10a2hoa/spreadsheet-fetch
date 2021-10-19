@@ -1,16 +1,32 @@
-export type ChangeRowColumnAction = { type: 'CHANGE_ROW_AND_COLUMN'; payload: ChangeRowColumn };
-export type SetDataAction = { type: 'SET_DATA'; payload: DataSheet };
+import { ChangeRowColumn, ChangeRowColumnById, DataSheet } from '../types/types';
 
-type ChangeRowColumn = {
-  row: number;
-  column: number;
-};
+interface ChangeRowColumnByIndexAction {
+  type: 'CHANGE_ROW_AND_COLUMN_BY_INDEX';
+  payload: ChangeRowColumnById;
+}
+interface SetDataByIndexAction {
+  type: 'SET_DATA_BY_INDEX';
+  payload: DataSheet;
+}
 
-export type DataSheet = {
-  [key: string]: number | string | any;
-};
+interface DeleteSheetByIndexAction {
+  type: 'DELETE_SHEET_BY_INDEX';
+  payload: { id: number };
+}
 
-export const changeRowAndColumn = (rowAndColumn: ChangeRowColumn): ChangeRowColumnAction => ({
-  type: 'CHANGE_ROW_AND_COLUMN',
-  payload: rowAndColumn
+export const changeRowAndColumn = (id: number, rowAndColumn: ChangeRowColumn): ChangeRowColumnByIndexAction => ({
+  type: 'CHANGE_ROW_AND_COLUMN_BY_INDEX',
+  payload: { id: id, rowAndColumn: rowAndColumn }
 });
+
+export const setData = (id: number, data: DataSheet): SetDataByIndexAction => ({
+  type: 'SET_DATA_BY_INDEX',
+  payload: { id: id, data: data }
+});
+
+export const deleteSheet = (id: number): DeleteSheetByIndexAction => ({
+  type: 'DELETE_SHEET_BY_INDEX',
+  payload: { id: id }
+});
+
+export type Actions = ChangeRowColumnByIndexAction | SetDataByIndexAction | DeleteSheetByIndexAction;

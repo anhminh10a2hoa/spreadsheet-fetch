@@ -1,29 +1,50 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { DataFormatSave } from '../types/types';
-import { Action } from './actions';
+import { SheetState } from '../types/types';
+import { Actions } from './actions';
 
-export interface SheetState {
-  row: number;
-  column: number;
-  data: DataFormatSave;
+export interface Data {
+  data: Array<SheetState>;
 }
 
-const initialState = {
-  row: localStorage.getItem('row') ? parseInt(localStorage.getItem('row')!) : 31,
-  column: localStorage.getItem('column') ? parseInt(localStorage.getItem('column')!) : 31,
-  data: localStorage.getItem('data') ? JSON.parse(localStorage.getItem('data')!) : {}
+const initialState: Data = {
+  data:
+    localStorage.getItem('data') === null
+      ? [{ row: 31, column: 31, dataSheet: {}, id: 0 }]
+      : JSON.parse(localStorage.getItem('data')!)
 };
 
-export const sheetReducer = (state: SheetState = initialState, action: Action) => {
+export const sheetReducer = (state: Data = initialState, action: Actions) => {
   switch (action.type) {
-    case 'CHANGE_ROW_AND_COLUMN': {
-      localStorage.setItem('row', action.payload.row.toString());
-      localStorage.setItem('column', action.payload.column.toString());
-      return { ...state, row: action.payload.row, column: action.payload.column };
+    case 'CHANGE_ROW_AND_COLUMN_BY_INDEX': {
+      const id = action.payload.id;
+      const newData = state.data;
+      if (state.data) {
+        const objIndex = state.data.findIndex((x) => x.id === id);
+        if (newData) {
+          newData[objIndex].row = action.payload.rowAndColumn.row;
+          newData[objIndex].column = action.payload.rowAndColumn.column;
+        }
+      }
+      localStorage.setItem('data', JSON.stringify(newData));
+      return { ...state, data: newData };
     }
-    case 'SET_DATA': {
-      localStorage.setItem('data', JSON.stringify(action.payload));
-      return { ...state, data: JSON.stringify(action.payload) };
+    case 'SET_DATA_BY_INDEX': {
+      const id = action.payload.id;
+      const newData = state.data;
+      if (state.data) {
+        const objIndex = state.data.findIndex((x) => x.id === id);
+        if (newData) {
+          newData[objIndex].dataSheet = action.payload.data;
+        }
+      }
+      localStorage.setItem('data', JSON.stringify(newData));
+      return { ...state, data: newData };
+    }
+    case 'DELETE_SHEET_BY_INDEX': {
+      const id = action.payload.id;
+      const newData = state.data;
+      newData.splice(id, 1);
+      return { ...state, data: newData };
     }
     default:
       return state;

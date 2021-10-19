@@ -1,5 +1,22 @@
-export type DataFormatSave = {
+export type ChangeRowColumn = {
+  row: number;
+  column: number;
+};
+
+export type ChangeRowColumnById = {
+  rowAndColumn: ChangeRowColumn;
+  id: number;
+};
+
+export type DataSheet = {
   [key: string]: number | string | any;
+};
+
+export type SheetState = {
+  id: number;
+  row: number;
+  column: number;
+  dataSheet: DataSheet;
 };
 
 export type InputEvent = React.ChangeEvent<HTMLInputElement>;

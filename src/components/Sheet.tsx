@@ -1,27 +1,29 @@
-import React, { useState, Fragment, useEffect, useRef, useCallback } from 'react';
+import React, { Fragment, useEffect, useRef, useCallback } from 'react';
 import axios from 'axios';
 import { Sheet as StyledSheet } from '../styles';
 
-import { getColumnName, getColumnIndex } from '../utils/helper';
+import { getColumnName } from '../utils/helper';
 import Cell from './Cell';
 
-import { CellValueType, DataFormatSave, CellValueTypeByIndex } from '../types/types';
-import { SheetState } from '../redux/sheetReducer';
-import { useSelector } from 'react-redux';
+import { CellValueType, DataSheet, CellValueTypeByIndex } from '../types/types';
+import { Data } from '../redux/sheetReducer';
+import { useDispatch, useSelector } from 'react-redux';
+import { setData } from '../redux/actions';
 interface SheetProps {
   getData: any;
-  simpleRowAndColumn: DataFormatSave;
-  dataJson: DataFormatSave | null;
+  dataJson: DataSheet | null;
   inputIndex: string;
   textInput: string;
 }
 
 type CallbackType = (...args: any) => void;
 
-const Sheet: React.FC<SheetProps> = ({ getData, simpleRowAndColumn, dataJson, textInput, inputIndex }) => {
-  const row = useSelector((state: SheetState) => state.row);
-  const column = useSelector((state: SheetState) => state.column);
-  const [data, setData] = useState<DataFormatSave>({});
+const Sheet: React.FC<SheetProps> = ({ getData, dataJson, textInput, inputIndex }) => {
+  const sheetIndex = 0;
+  const dispatch = useDispatch();
+  const row = useSelector((state: Data) => state.data[sheetIndex].row);
+  const column = useSelector((state: Data) => state.data[sheetIndex].column);
+  const data = useSelector((state: Data) => state.data[sheetIndex].dataSheet);
   const tableElement = useRef(null);
   const sparqlUrl = import.meta.env.VITE_PROJECT_WARE_SPARQL;
 
@@ -44,25 +46,10 @@ const Sheet: React.FC<SheetProps> = ({ getData, simpleRowAndColumn, dataJson, te
     if (dataJson) {
       if (window.confirm('Are you sure you want to import the data?')) {
         // Save it!
-        setData(dataJson);
+        dispatch(setData(sheetIndex, dataJson));
       }
     }
   }, [dataJson]);
-
-  useEffect(() => {
-    const newData: DataFormatSave = {};
-    for (const item in data) {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      const row = parseInt(item.match(/^\d+|\d+\b|\d+(?=\w)/g)![0]);
-      const column = item.toString().substring(row.toString().length, item.length);
-      newData[
-        `${row - simpleRowAndColumn['startRow']}${getColumnName(
-          getColumnIndex(column) - simpleRowAndColumn['startCol']
-        )}`
-      ] = data[item];
-    }
-    setData(newData);
-  }, [simpleRowAndColumn]);
 
   const setCellValue = useCallback<CallbackType>(
     ({ row, column, value }: CellValueType) => {
@@ -70,7 +57,7 @@ const Sheet: React.FC<SheetProps> = ({ getData, simpleRowAndColumn, dataJson, te
         const query: Array<string> = value.split("fetch('");
         axios.get(`${sparqlUrl}&query=${query[1].substr(0, query[1].length - 2)}`).then((res) => {
           if (Array.isArray(res.data.results.bindings)) {
-            const fetchData: DataFormatSave = { ...data };
+            const fetchData: DataSheet = { ...data };
             for (const [index, element] of res.data.results.bindings.entries()) {
               // fetchData[`${parseInt(columnStart)}${getColumnName(1 + index)}`] =
               let i = 0;
@@ -81,16 +68,16 @@ const Sheet: React.FC<SheetProps> = ({ getData, simpleRowAndColumn, dataJson, te
                 i++;
               }
             }
-            setData(fetchData);
+            dispatch(setData(sheetIndex, fetchData));
           }
         });
       } else {
-        const newData: DataFormatSave = { ...data };
+        const newData: DataSheet = { ...data };
         newData[`${row}${column}`] = value;
         if (document.getElementById('long-text-input')) {
           (document.getElementById('long-text-input') as any).value = value;
         }
-        setData(newData);
+        dispatch(setData(sheetIndex, newData));
       }
     },
     [data, setData]
@@ -102,19 +89,19 @@ const Sheet: React.FC<SheetProps> = ({ getData, simpleRowAndColumn, dataJson, te
         const query: Array<string> = value.split("fetch('");
         axios.get(`${sparqlUrl}&query=${query[1].substr(0, query[1].length - 2)}`).then((res) => {
           if (Array.isArray(res.data.results.bindings)) {
-            const fetchData: DataFormatSave = { ...data };
+            const fetchData: DataSheet = { ...data };
             for (const element of res.data.results.bindings.entries()) {
               for (const prop in element) {
                 fetchData[`${inputIndex}`] = element[prop].value;
               }
             }
-            setData(fetchData);
+            dispatch(setData(sheetIndex, fetchData));
           }
         });
       } else {
-        const newData: DataFormatSave = { ...data };
+        const newData: DataSheet = { ...data };
         newData[`${inputIndex}`] = value;
-        setData(newData);
+        dispatch(setData(sheetIndex, newData));
       }
     },
     [data, setData]
