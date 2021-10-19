@@ -113,6 +113,12 @@ export const InputWrapper = styled.div`
 export const NumberInput = styled.input`
   margin: 7px;
   width: 80px;
+  border: 1px solid #d4d4d4;
+  :focus {
+    border: 1px solid #4B89D1;
+    outline: none;
+    background-color: #e7f2f8;
+  }
 `;
 
 export const Header = styled.div`
@@ -120,17 +126,25 @@ export const Header = styled.div`
   color: #282828;
   padding: 4px;
   text-align: center;
+  background-color: #F4F5F8;
+  border: none;
+  border-bottom: .1px solid #d4d4d4;
+  border-right: .1px solid #d4d4d4;
 `;
 
 export const Input = styled.input`
   resize: both;
   overflow: auto;
   padding: 0 4px;
+  border: none;
+  border-bottom: .1px solid #d4d4d4;
+  border-right: .1px solid #d4d4d4;
   :not(:focus) {
     text-align: right;
   }
   :focus {
-    border: 1px solid #1581ba;
+    border: 2px solid #4b89d1;
+    outline: none;
     background-color: #e7f2f8;
   }
 `;
@@ -148,11 +162,23 @@ export const InputExtensionContainer = styled.div`
 
 export const TextInput = styled.input`
   width: calc(100vw - 200px);
+  border: .1px solid #7a7a7a;
+  :focus {
+    border: 1px solid #4B89D1;
+    outline: none;
+    background-color: #e7f2f8;
+  }
 `
 
 export const IndexInput = styled.input`
   width: 50px;
   margin-right: 10px;
+  border: .1px solid #7a7a7a;
+  :focus {
+    border: 1px solid #4B89D1;
+    outline: none;
+    background-color: #e7f2f8;
+  }
 `
 
 export const BarrierIcon = styled(AiOutlineHolder)`
