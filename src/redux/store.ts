@@ -1,4 +1,4 @@
-import { createStore } from 'redux'
-import { sheetReducer } from './sheetReducer'
+import { createStore } from 'redux';
+import { sheetReducer } from './sheetReducer';
 
-export const store = createStore(sheetReducer)
+export const store = createStore(sheetReducer);

@@ -1,95 +1,83 @@
-import React, { useState, Fragment, useEffect, useRef, useCallback } from "react";
-import axios from "axios";
-import { Sheet as StyledSheet } from "../styles";
+import React, { Fragment, useEffect, useRef, useCallback } from 'react';
+import axios from 'axios';
+import { Sheet as StyledSheet } from '../styles';
 
-import { getColumnName, getColumnIndex } from "../utils/helper";
-import Cell from "./Cell";
+import { getColumnName } from '../utils/helper';
+import Cell from './Cell';
 
-import { CellValueType, DataFormatSave, CellValueTypeByIndex } from "../types/types";
+import { CellValueType, DataSheet, CellValueTypeByIndex } from '../types/types';
+import { Data } from '../redux/sheetReducer';
+import { useDispatch, useSelector } from 'react-redux';
+import { setData } from '../redux/actions';
 interface SheetProps {
-  numberOfRows: number;
-  numberOfColumns: number;
   getData: any;
-  resetData: number;
-  simpleRowAndColumn: DataFormatSave;
-  dataJson: DataFormatSave | null;
+  dataJson: DataSheet | null;
   inputIndex: string;
   textInput: string;
 }
 
-type CallbackType = (...args: any) => void
+type CallbackType = (...args: any) => void;
 
-
-const Sheet: React.FC<SheetProps> = ({ numberOfRows, numberOfColumns, getData, simpleRowAndColumn, resetData, dataJson, textInput, inputIndex }) => {
-  const [data, setData] = useState<DataFormatSave>({});
+const Sheet: React.FC<SheetProps> = ({ getData, dataJson, textInput, inputIndex }) => {
+  const sheetIndex = 0;
+  const dispatch = useDispatch();
+  const row = useSelector((state: Data) => state.data[sheetIndex].row);
+  const column = useSelector((state: Data) => state.data[sheetIndex].column);
+  const data = useSelector((state: Data) => state.data[sheetIndex].dataSheet);
   const tableElement = useRef(null);
-  const sparqlUrl = import.meta.env.VITE_PROJECT_WARE_SPARQL
+  const sparqlUrl = import.meta.env.VITE_PROJECT_WARE_SPARQL;
 
   useEffect(() => {
-    if(data) {
-      getData.current = data
+    if (data) {
+      getData.current = data;
     }
-  }, [data])
+  }, [data]);
 
   useEffect(() => {
-    setData({})
-  }, [resetData])
-
-  useEffect(() => {
-    if(inputIndex !== "" && inputIndex) {
+    if (inputIndex !== '' && inputIndex) {
       setCellValueByIndex({
         inputIndex: inputIndex,
         value: textInput
-      })
+      });
     }
-  }, [textInput, inputIndex])
+  }, [textInput, inputIndex]);
 
   useEffect(() => {
-    if(dataJson) {
+    if (dataJson) {
       if (window.confirm('Are you sure you want to import the data?')) {
         // Save it!
-        setData(dataJson);
+        dispatch(setData(sheetIndex, dataJson));
       }
     }
-  }, [dataJson])
-
-  useEffect(() => {
-    const newData: DataFormatSave = {};
-    for (const item in data) {
-      const row = parseInt(item.match(/^\d+|\d+\b|\d+(?=\w)/g)![0])
-      const column = item.toString().substring(row.toString().length, item.length)
-      newData[`${row-simpleRowAndColumn['startRow']}${getColumnName(getColumnIndex(column)-simpleRowAndColumn['startCol'])}`] = data[item]
-    }
-    setData(newData)
-  }, [simpleRowAndColumn])
+  }, [dataJson]);
 
   const setCellValue = useCallback<CallbackType>(
     ({ row, column, value }: CellValueType) => {
-      if(typeof value === 'string' && value.includes("fetch('") && value.includes("')")) {
-        const query: Array<string> = value.split("fetch('")
+      if (typeof value === 'string' && value.includes("fetch('") && value.includes("')")) {
+        const query: Array<string> = value.split("fetch('");
         axios.get(`${sparqlUrl}&query=${query[1].substr(0, query[1].length - 2)}`).then((res) => {
-          if(Array.isArray(res.data.results.bindings)) {
-            const fetchData: DataFormatSave = { ...data };
+          if (Array.isArray(res.data.results.bindings)) {
+            const fetchData: DataSheet = { ...data };
             for (const [index, element] of res.data.results.bindings.entries()) {
-              // fetchData[`${parseInt(columnStart)}${getColumnName(1 + index)}`] = 
+              // fetchData[`${parseInt(columnStart)}${getColumnName(1 + index)}`] =
               let i = 0;
               for (const prop in element) {
-                const rowI: number = row + index
-                const columnI: number = 64 - i
-                fetchData[`${rowI}${getColumnName(column.charCodeAt(0) - columnI)}`] = element[prop].value
+                const rowI: number = row + index;
+                const columnI: number = 64 - i;
+                fetchData[`${rowI}${getColumnName(column.charCodeAt(0) - columnI)}`] = element[prop].value;
                 i++;
               }
             }
-            setData(fetchData);
+            dispatch(setData(sheetIndex, fetchData));
           }
-        })
+        });
       } else {
-        const newData: DataFormatSave = { ...data };
+        const newData: DataSheet = { ...data };
         newData[`${row}${column}`] = value;
-        if(document.getElementById('long-text-input')) {
+        if (document.getElementById('long-text-input')) {
           (document.getElementById('long-text-input') as any).value = value;
         }
-        setData(newData);
+        dispatch(setData(sheetIndex, newData));
       }
     },
     [data, setData]
@@ -97,23 +85,23 @@ const Sheet: React.FC<SheetProps> = ({ numberOfRows, numberOfColumns, getData, s
 
   const setCellValueByIndex = useCallback<CallbackType>(
     ({ inputIndex, value }: CellValueTypeByIndex) => {
-      if(typeof value === 'string' && value.includes("fetch('") && value.includes("')")) {
-        const query: Array<string> = value.split("fetch('")
+      if (typeof value === 'string' && value.includes("fetch('") && value.includes("')")) {
+        const query: Array<string> = value.split("fetch('");
         axios.get(`${sparqlUrl}&query=${query[1].substr(0, query[1].length - 2)}`).then((res) => {
-          if(Array.isArray(res.data.results.bindings)) {
-            const fetchData: DataFormatSave = { ...data };
+          if (Array.isArray(res.data.results.bindings)) {
+            const fetchData: DataSheet = { ...data };
             for (const element of res.data.results.bindings.entries()) {
               for (const prop in element) {
-                fetchData[`${inputIndex}`] = element[prop].value
+                fetchData[`${inputIndex}`] = element[prop].value;
               }
             }
-            setData(fetchData);
+            dispatch(setData(sheetIndex, fetchData));
           }
-        })
+        });
       } else {
-        const newData: DataFormatSave = { ...data };
+        const newData: DataSheet = { ...data };
         newData[`${inputIndex}`] = value;
-        setData(newData);
+        dispatch(setData(sheetIndex, newData));
       }
     },
     [data, setData]
@@ -123,14 +111,14 @@ const Sheet: React.FC<SheetProps> = ({ numberOfRows, numberOfColumns, getData, s
     ({ row, column }: CellValueType) => {
       const cellContent: string | undefined = data[`${row}${column}`];
       if (cellContent) {
-        if (cellContent?.charAt(0) === "=") {
+        if (cellContent?.charAt(0) === '=') {
           // This regex converts = "A1+A2" to ["A1","+","A2"]
-          const expression: Array<string> = cellContent.substr(1).split(/([+*-\/])/g);
-          let subStitutedExpression: string = "";
-          expression.forEach((item:any) => {
+          const expression: Array<string> = cellContent.substr(1).split(/([+*-/])/g);
+          let subStitutedExpression = '';
+          expression.forEach((item: any) => {
             // Regex to test if it is of form alphabet followed by number ex: A1
-            if (/^[0-9].*[A-z]$/g.test(item || "")) {
-              subStitutedExpression += data[(item || "").toUpperCase()] || 0;
+            if (/^[0-9].*[A-z]$/g.test(item || '')) {
+              subStitutedExpression += data[(item || '').toUpperCase()] || 0;
             } else {
               subStitutedExpression += item;
             }
@@ -141,60 +129,28 @@ const Sheet: React.FC<SheetProps> = ({ numberOfRows, numberOfColumns, getData, s
             // eslint-disable-next-line
             return eval(subStitutedExpression);
           } catch (error) {
-            return "ERROR!";
+            return 'ERROR!';
           }
         }
         return cellContent;
       }
-      return "";
+      return '';
     },
     [data]
   );
 
-  // const mouseDown = (index: number) => {
-  //   setActiveIndex(index);
-  // };
-
-  //  const mouseMove = (e: any) => {
-  //    //
-  //  }
-
-  // const removeListeners = useCallback(() => {
-  //   window.removeEventListener("mousemove", mouseMove);
-  //   window.removeEventListener("mouseup", removeListeners);
-  // }, [mouseMove]);
-
-  // const mouseUp = useCallback(() => {
-  //   setActiveIndex(null);
-  //   removeListeners();
-  // }, [setActiveIndex, removeListeners]);
-
-  // useEffect(() => {
-  //   if (activeIndex !== null) {
-  //     window.addEventListener("mousemove", mouseMove);
-  //     window.addEventListener("mouseup", mouseUp);
-  //   }
-
-  //   return () => {
-  //     removeListeners();
-  //   };
-  // }, [activeIndex, mouseMove, mouseUp, removeListeners]);
-
-
   return (
-    <StyledSheet numberOfColumns={numberOfColumns} ref={tableElement}>
-      {Array(numberOfRows)
+    <StyledSheet numberOfColumns={column} ref={tableElement}>
+      {Array(row)
         .fill(0)
         .map((_, i: number) => {
           return (
             <Fragment key={i}>
-              {Array(numberOfColumns)
+              {Array(column)
                 .fill(0)
                 .map((_, j: number) => {
                   const columnName: string = getColumnName(j);
                   return (
-                    <>
-                    
                     <Cell
                       rowIndex={i}
                       columnIndex={j}
@@ -203,12 +159,7 @@ const Sheet: React.FC<SheetProps> = ({ numberOfRows, numberOfColumns, getData, s
                       currentValue={data[`${i}${columnName}`]}
                       computeCell={computeCell}
                       key={`${columnName}${i}`}
-                      numOfCol={numberOfColumns}
-                      numOfRow={numberOfRows}
-                      //onMouseDown={() => mouseDown(i)}
                     />
-                   
-                    </>
                   );
                 })}
             </Fragment>
