@@ -45,7 +45,7 @@ export const Button = styled.button`
 export const Navbar = styled.div`
   padding: 35px;
   text-align: center;
-  background: #1d7545;
+  background: #f27a0a;
   color: white;
   font-size: 30px;
 
