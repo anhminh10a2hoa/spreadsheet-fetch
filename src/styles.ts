@@ -45,7 +45,7 @@ export const Button = styled.button`
 export const Navbar = styled.div`
   padding: 35px;
   text-align: center;
-  background: #f27a0a;
+  background: #ed5ced;
   color: white;
   font-size: 30px;
 
@@ -113,7 +113,7 @@ export const InputWrapper = styled.div`
 export const NumberInput = styled.input`
   margin: 7px;
   width: 80px;
-  border: 1px solid #d4d4d4;
+  border: 1px solid #4B89D1;
   :focus {
     border: 1px solid #4B89D1;
     outline: none;
