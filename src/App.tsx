@@ -57,6 +57,11 @@ const App: FC = () => {
     }
   }, [focusedElement]);
 
+  useEffect(() => {
+    console.log(window.location.search)
+    
+  }, [])
+
   const handleChangerows = (event: InputEvent): void => {
     event.preventDefault();
     const row: number = parseInt(event.target.value);

@@ -1,4 +1,4 @@
-import { ChangeRowColumn, ChangeRowColumnById, DataSheet } from '@types';
+import { ChangeRowColumn, ChangeRowColumnById, DataSheet, UserState } from '@types';
 
 interface ChangeRowColumnByIndexAction {
   type: 'CHANGE_ROW_AND_COLUMN_BY_INDEX';
@@ -12,6 +12,11 @@ interface SetDataByIndexAction {
 interface DeleteSheetByIndexAction {
   type: 'DELETE_SHEET_BY_INDEX';
   payload: { id: number };
+}
+
+interface UserChangeAction {
+  type: 'SET_USER_ACTION';
+  payload: UserState;
 }
 
 export const changeRowAndColumn = (id: number, rowAndColumn: ChangeRowColumn): ChangeRowColumnByIndexAction => ({
@@ -29,4 +34,5 @@ export const deleteSheet = (id: number): DeleteSheetByIndexAction => ({
   payload: { id: id }
 });
 
-export type Actions = ChangeRowColumnByIndexAction | SetDataByIndexAction | DeleteSheetByIndexAction;
+export type SheetActions = ChangeRowColumnByIndexAction | SetDataByIndexAction | DeleteSheetByIndexAction;
+export type UserActions = UserChangeAction;

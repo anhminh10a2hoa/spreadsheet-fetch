@@ -1,5 +1,5 @@
 import { FC, LazyExoticComponent } from 'react';
-import { RouteType } from '@enums';
+import { Action, RouteType } from '@enums';
 
 export type ViewComponentProps = LazyExoticComponent<FC>;
 export type RouteComponent = ViewComponentProps | FC;
@@ -24,6 +24,12 @@ export type SheetState = {
   column: number;
   dataSheet: DataSheet;
 };
+
+export type UserState = {
+  userId: string;
+  menu: string;
+  userAction: Action;
+}
 
 export type InputEvent = React.ChangeEvent<HTMLInputElement>;
 
