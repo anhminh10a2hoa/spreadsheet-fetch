@@ -1,8 +1,8 @@
 import React, { useState, memo } from 'react';
 import { useSelector } from 'react-redux';
-import { Data } from '../redux/sheetReducer';
-import { Input, Header } from '../styles';
-import { getColumnName } from '../utils/helper';
+import { Data } from '@redux/sheetReducer';
+import { Input, Header } from '@themes';
+import { getColumnName } from '@utils/helper';
 
 interface CellProps {
   rowIndex: number;

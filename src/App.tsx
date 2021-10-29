@@ -1,6 +1,12 @@
 import React, { useState, useRef, useEffect, FC } from 'react';
 import './App.css';
 import { Reset } from 'styled-reset';
+
+import Tooltip from '@mui/material/Tooltip';
+import { getColumnIndex, getColumnName, useActiveElement } from '@utils/helper';
+import Sheet from '@components/Sheet';
+import IconButton from '@mui/material/IconButton';
+import { InputEvent, DownloadFileType, DataSheet } from '@types';
 import {
   AppContainer,
   InputExtensionContainer,
@@ -22,15 +28,10 @@ import {
   RowIcon,
   ColumnIcon,
   GithubIcon
-} from './styles';
-import Tooltip from '@mui/material/Tooltip';
-import { getColumnIndex, getColumnName, useActiveElement } from './utils/helper';
-import Sheet from './components/Sheet';
-import IconButton from '@mui/material/IconButton';
-import { InputEvent, DownloadFileType, DataSheet } from './types/types';
+} from '@themes';
 import { useDispatch, useSelector } from 'react-redux';
-import { Data } from './redux/sheetReducer';
-import { changeRowAndColumn, setData } from './redux/actions';
+import { Data } from '@redux/sheetReducer';
+import { changeRowAndColumn, setData } from '@redux/actions';
 
 const App: FC = () => {
   const dispatch = useDispatch();

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { SheetState } from '../types/types';
+import { SheetState } from '@types';
 import { Actions } from './actions';
 
 export interface Data {

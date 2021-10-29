@@ -1,14 +1,14 @@
 import React, { Fragment, useEffect, useRef, useCallback } from 'react';
 import axios from 'axios';
-import { Sheet as StyledSheet } from '../styles';
+import { Sheet as StyledSheet } from '@themes';
 
-import { getColumnName } from '../utils/helper';
+import { getColumnName } from '@utils/helper';
 import Cell from './Cell';
 
-import { CellValueType, DataSheet, CellValueTypeByIndex } from '../types/types';
-import { Data } from '../redux/sheetReducer';
+import { CellValueType, DataSheet, CellValueTypeByIndex } from '@types';
+import { Data } from '@redux/sheetReducer';
 import { useDispatch, useSelector } from 'react-redux';
-import { setData } from '../redux/actions';
+import { setData } from '@redux/actions';
 interface SheetProps {
   getData: any;
   dataJson: DataSheet | null;
