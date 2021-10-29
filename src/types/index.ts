@@ -1,3 +1,9 @@
+import { FC, LazyExoticComponent } from 'react';
+import { RouteType } from '@enums';
+
+export type ViewComponentProps = LazyExoticComponent<FC>;
+export type RouteComponent = ViewComponentProps | FC;
+
 export type ChangeRowColumn = {
   row: number;
   column: number;
@@ -37,3 +43,9 @@ export type CellValueTypeByIndex = {
   inputIndex: string;
   value?: number | string;
 };
+
+export interface Route {
+  path: string;
+  component: RouteComponent;
+  type: RouteType;
+}

@@ -1,14 +1,14 @@
 import React, { Fragment, useEffect, useRef, useCallback } from 'react';
 import axios from 'axios';
-import { Sheet as StyledSheet } from '../styles';
+import { Sheet as StyledSheet } from '@themes';
 
-import { getColumnName } from '../utils/helper';
+import { getColumnName } from '@utils/helper';
 import Cell from './Cell';
 
-import { CellValueType, DataSheet, CellValueTypeByIndex } from '../types/types';
-import { Data } from '../redux/sheetReducer';
+import { CellValueType, DataSheet, CellValueTypeByIndex } from '@types';
+import { Data } from '@redux/sheetReducer';
 import { useDispatch, useSelector } from 'react-redux';
-import { setData } from '../redux/actions';
+import { setData } from '@redux/actions';
 interface SheetProps {
   getData: any;
   dataJson: DataSheet | null;
@@ -55,7 +55,7 @@ const Sheet: React.FC<SheetProps> = ({ getData, dataJson, textInput, inputIndex 
     ({ row, column, value }: CellValueType) => {
       if (typeof value === 'string' && value.includes("fetch('") && value.includes("')")) {
         const query: Array<string> = value.split("fetch('");
-        axios.get(`${sparqlUrl}&query=${query[1].substr(0, query[1].length - 2)}`).then((res) => {
+        axios.get(`${sparqlUrl}&query=${query[1].substring(0, query[1].length - 2)}`).then((res) => {
           if (Array.isArray(res.data.results.bindings)) {
             const fetchData: DataSheet = { ...data };
             for (const [index, element] of res.data.results.bindings.entries()) {
@@ -87,7 +87,7 @@ const Sheet: React.FC<SheetProps> = ({ getData, dataJson, textInput, inputIndex 
     ({ inputIndex, value }: CellValueTypeByIndex) => {
       if (typeof value === 'string' && value.includes("fetch('") && value.includes("')")) {
         const query: Array<string> = value.split("fetch('");
-        axios.get(`${sparqlUrl}&query=${query[1].substr(0, query[1].length - 2)}`).then((res) => {
+        axios.get(`${sparqlUrl}&query=${query[1].substring(0, query[1].length - 2)}`).then((res) => {
           if (Array.isArray(res.data.results.bindings)) {
             const fetchData: DataSheet = { ...data };
             for (const element of res.data.results.bindings.entries()) {
@@ -113,7 +113,7 @@ const Sheet: React.FC<SheetProps> = ({ getData, dataJson, textInput, inputIndex 
       if (cellContent) {
         if (cellContent?.charAt(0) === '=') {
           // This regex converts = "A1+A2" to ["A1","+","A2"]
-          const expression: Array<string> = cellContent.substr(1).split(/([+*-/])/g);
+          const expression: Array<string> = cellContent.substring(1).split(/([+*-/])/g);
           let subStitutedExpression = '';
           expression.forEach((item: any) => {
             // Regex to test if it is of form alphabet followed by number ex: A1

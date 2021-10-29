@@ -1,4 +1,4 @@
-import { ChangeRowColumn, ChangeRowColumnById, DataSheet } from '../types/types';
+import { ChangeRowColumn, ChangeRowColumnById, DataSheet } from '@types';
 
 interface ChangeRowColumnByIndexAction {
   type: 'CHANGE_ROW_AND_COLUMN_BY_INDEX';
