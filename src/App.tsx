@@ -31,7 +31,8 @@ import {
 } from '@themes';
 import { useDispatch, useSelector } from 'react-redux';
 import { Data } from '@redux/sheetReducer';
-import { changeRowAndColumn, setData } from '@redux/actions';
+import { changeRowAndColumn, setData, setUserAction } from '@redux/actions';
+import { convertActionToEnumType, decryptUserId } from '@utils/auth';
 
 const App: FC = () => {
   const dispatch = useDispatch();
@@ -58,8 +59,34 @@ const App: FC = () => {
   }, [focusedElement]);
 
   useEffect(() => {
-    console.log(window.location.search)
-    
+    const searchKey = import.meta.env.VITE_SEARCH_KEY?.toString();
+    const searchQueryArray = window.location.search.split(searchKey + "&")
+    const userIdEncrypted = searchQueryArray.find((item) => item.includes('userId='))
+    const menuQuery = searchQueryArray.find((item) => item.includes('menu='))
+    const actionQuery = searchQueryArray.find((item) => item.includes('action='))
+    let userId, menu, action;
+    if(userIdEncrypted && userIdEncrypted.includes('?userId=')) {
+      userId = userIdEncrypted.replace('?userId=', '')
+    } else if(userIdEncrypted && userIdEncrypted.includes('userId=')) {
+      userId = userIdEncrypted.replace('userId=', '')
+    } else {
+      userId = ''
+    }
+    if(menuQuery && menuQuery.includes('?menu=')) {
+      menu = menuQuery.replace('?menu=', '')
+    } else if(menuQuery && menuQuery.includes('menu=')) {
+      menu = menuQuery.replace('menu=', '')
+    } else {
+      menu = ''
+    }
+    if(actionQuery && actionQuery.includes('?action=')) {
+      action = actionQuery.replace('?action=', '')
+    } else if(actionQuery && actionQuery.includes('action=')) {
+      action = actionQuery.replace('action=', '')
+    } else {
+      action = ''
+    }
+    dispatch(setUserAction({userId: decryptUserId(userId), userAction: convertActionToEnumType(action), menu: menu}));
   }, [])
 
   const handleChangerows = (event: InputEvent): void => {

@@ -34,5 +34,10 @@ export const deleteSheet = (id: number): DeleteSheetByIndexAction => ({
   payload: { id: id }
 });
 
+export const setUserAction = (user: UserState): UserChangeAction => ({
+  type: 'SET_USER_ACTION',
+  payload: user
+});
+
 export type SheetActions = ChangeRowColumnByIndexAction | SetDataByIndexAction | DeleteSheetByIndexAction;
 export type UserActions = UserChangeAction;
