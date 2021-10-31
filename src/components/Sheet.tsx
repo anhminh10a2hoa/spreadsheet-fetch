@@ -75,7 +75,7 @@ const Sheet: React.FC<SheetProps> = ({ getData, dataJson, textInput, inputIndex,
       } else {
         const newData: DataSheet = { ...data };
         newData[`${row}${column}`] = value;
-        if (document.getElementById('long-text-input') && typeof value === 'string') {
+        if (typeof value === 'string') {
           setTextInput(value)
         }
         dispatch(setData(sheetIndex, newData));
@@ -101,8 +101,14 @@ const Sheet: React.FC<SheetProps> = ({ getData, dataJson, textInput, inputIndex,
         });
       } else {
         const newData: DataSheet = { ...data };
-        newData[`${inputIndex}`] = value;
-        dispatch(setData(sheetIndex, newData));
+        console.log(newData);
+        if(value !== "") {
+          newData[`${inputIndex}`] = value;
+          dispatch(setData(sheetIndex, newData));
+        } else {
+          delete newData[`${inputIndex}`]
+          dispatch(setData(sheetIndex, newData));
+        }
       }
     },
     [data, setData]
