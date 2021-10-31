@@ -46,6 +46,14 @@ export const sheetReducer = (state: Data = initialState, action: SheetActions) =
       newData.splice(id, 1);
       return { ...state, data: newData };
     }
+    case 'RESET_SHEET_BY_INDEX': {
+      const id = action.payload.id;
+      const newData = state.data;
+      newData[id].dataSheet = {}
+      newData[id].row = 31
+      newData[id].column = 31
+      return { ...state, data: newData };
+    }
     default:
       return state;
   }

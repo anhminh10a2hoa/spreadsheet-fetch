@@ -14,6 +14,11 @@ interface DeleteSheetByIndexAction {
   payload: { id: number };
 }
 
+interface ResetSheetByIndexAction {
+  type: 'RESET_SHEET_BY_INDEX';
+  payload: { id: number };
+}
+
 interface UserChangeAction {
   type: 'SET_USER_ACTION';
   payload: UserState;
@@ -34,10 +39,15 @@ export const deleteSheet = (id: number): DeleteSheetByIndexAction => ({
   payload: { id: id }
 });
 
+export const resetSheet = (id: number): ResetSheetByIndexAction => ({
+  type: 'RESET_SHEET_BY_INDEX',
+  payload: { id: id }
+});
+
 export const setUserAction = (user: UserState): UserChangeAction => ({
   type: 'SET_USER_ACTION',
   payload: user
 });
 
-export type SheetActions = ChangeRowColumnByIndexAction | SetDataByIndexAction | DeleteSheetByIndexAction;
+export type SheetActions = ChangeRowColumnByIndexAction | SetDataByIndexAction | DeleteSheetByIndexAction | ResetSheetByIndexAction;
 export type UserActions = UserChangeAction;

@@ -31,7 +31,7 @@ import {
 } from '@themes';
 import { useDispatch, useSelector } from 'react-redux';
 import { Data } from '@redux/sheetReducer';
-import { changeRowAndColumn, setData, setUserAction } from '@redux/actions';
+import { changeRowAndColumn, setData, setUserAction, resetSheet } from '@redux/actions';
 import { convertActionToEnumType, decryptUserId } from '@utils/auth';
 
 const App: FC = () => {
@@ -42,7 +42,7 @@ const App: FC = () => {
   const data = useSelector((state: Data) => state.data[sheetIndex].dataSheet);
   const [tempRow, setTempRow] = useState<number>(row - 1);
   const [tempColumn, setTempColumn] = useState<number>(column - 1);
-  const [fileName] = useState<string>('sheet 1');
+  const [fileName] = useState<string>('sheet ' + sheetIndex);
   const [dataJson, setDataJson] = useState<DataSheet | null>(null);
   const [inputIndex, setInputIndex] = React.useState<string>('');
   const [textInput, setTextInput] = React.useState<string>('');
@@ -158,7 +158,8 @@ const App: FC = () => {
   };
 
   const resetHandler = (): void => {
-    dispatch(changeRowAndColumn(sheetIndex, { row: 31, column: 31 }));
+    dispatch(resetSheet(sheetIndex))
+    setTextInput('');
     setTempRow(30);
     setTempColumn(30);
   };
@@ -299,3 +300,4 @@ const App: FC = () => {
 };
 
 export default App;
+
