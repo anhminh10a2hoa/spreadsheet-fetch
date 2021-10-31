@@ -4,7 +4,7 @@ import CryptoJS from 'crypto-js';
 export const decryptUserId = (userId: string): string => {
   const secretKey = import.meta.env.VITE_SECRET_KEY?.toString();
   if(secretKey && secretKey !== '') {
-    return JSON.parse(CryptoJS.AES.decrypt(userId, secretKey).toString(CryptoJS.enc.Utf8)).password;
+    return CryptoJS.AES.decrypt(userId, secretKey).toString(CryptoJS.enc.Utf8);
   }
   return '';
 }
