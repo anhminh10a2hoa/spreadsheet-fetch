@@ -1,19 +1,15 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { SheetState } from '@types';
+import { ISheetState } from '@types';
 import { SheetActions } from './actions';
 
-export interface Data {
-  data: Array<SheetState>;
-}
-
-const initialState: Data = {
+const initialState: ISheetState = {
   data:
     localStorage.getItem('data') === null
       ? [{ row: 31, column: 31, dataSheet: {}, id: 0 }]
       : JSON.parse(localStorage.getItem('data')!)
 };
 
-export const sheetReducer = (state: Data = initialState, action: SheetActions) => {
+export const sheetReducer = (state: ISheetState = initialState, action: SheetActions) => {
   switch (action.type) {
     case 'CHANGE_ROW_AND_COLUMN_BY_INDEX': {
       const id = action.payload.id;

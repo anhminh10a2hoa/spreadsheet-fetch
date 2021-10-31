@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { AiOutlineSave, AiFillFolderOpen, AiOutlineReload, AiFillPlayCircle, AiFillBulb, AiFillEdit, AiOutlineHolder, AiOutlineInsertRowAbove, AiOutlineInsertRowLeft, AiFillGithub } from "react-icons/ai";
+import { AiOutlineSave, AiFillFolderOpen, AiOutlineReload, AiFillPlayCircle, AiFillBulb, AiFillEdit, AiOutlineHolder, AiOutlineInsertRowAbove, AiOutlineInsertRowLeft, AiFillGithub, AiOutlineCode } from "react-icons/ai";
 
 interface SheetProps {
   numberOfColumns: number;
@@ -86,6 +86,11 @@ export const ChangeIcon = styled(AiFillPlayCircle)`
 `
 
 export const SimpleIcon = styled(AiFillBulb)`
+  font-size: 1.5rem;
+  cursor: pointer;
+`
+
+export const ActionIcon = styled(AiOutlineCode)`
   font-size: 1.5rem;
   cursor: pointer;
 `

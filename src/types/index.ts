@@ -25,7 +25,7 @@ export type SheetState = {
   dataSheet: DataSheet;
 };
 
-export type UserState = {
+export type IUserState = {
   userId: string;
   menu: string;
   userAction: Action;
@@ -54,4 +54,19 @@ export interface Route {
   path: string;
   component: RouteComponent;
   type: RouteType;
+}
+
+export interface IRootState {
+  sheetReducer: ISheetState;
+  userReducer: IUserState
+}
+
+export interface ISheetState {
+  data: Array<SheetState>;
+}
+
+export interface IToastObject {
+  type: string;
+  message: string;
+  open: boolean;
 }

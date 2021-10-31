@@ -1,4 +1,4 @@
-import { ChangeRowColumn, ChangeRowColumnById, DataSheet, UserState } from '@types';
+import { ChangeRowColumn, ChangeRowColumnById, DataSheet, IUserState } from '@types';
 
 interface ChangeRowColumnByIndexAction {
   type: 'CHANGE_ROW_AND_COLUMN_BY_INDEX';
@@ -21,7 +21,7 @@ interface ResetSheetByIndexAction {
 
 interface UserChangeAction {
   type: 'SET_USER_ACTION';
-  payload: UserState;
+  payload: IUserState;
 }
 
 export const changeRowAndColumn = (id: number, rowAndColumn: ChangeRowColumn): ChangeRowColumnByIndexAction => ({
@@ -44,7 +44,7 @@ export const resetSheet = (id: number): ResetSheetByIndexAction => ({
   payload: { id: id }
 });
 
-export const setUserAction = (user: UserState): UserChangeAction => ({
+export const setUserAction = (user: IUserState): UserChangeAction => ({
   type: 'SET_USER_ACTION',
   payload: user
 });

@@ -5,12 +5,10 @@ import { Sheet as StyledSheet } from '@themes';
 import { getColumnName } from '@utils/helper';
 import Cell from './Cell';
 
-import { CellValueType, DataSheet, CellValueTypeByIndex } from '@types';
-import { Data } from '@redux/sheetReducer';
+import { CellValueType, DataSheet, CellValueTypeByIndex, IRootState } from '@types';
 import { useDispatch, useSelector } from 'react-redux';
 import { setData } from '@redux/actions';
 interface SheetProps {
-  getData: any;
   dataJson: DataSheet | null;
   inputIndex: string;
   textInput: string;
@@ -19,20 +17,14 @@ interface SheetProps {
 
 type CallbackType = (...args: any) => void;
 
-const Sheet: React.FC<SheetProps> = ({ getData, dataJson, textInput, inputIndex, setTextInput }) => {
+const Sheet: React.FC<SheetProps> = ({  dataJson, textInput, inputIndex, setTextInput }) => {
   const sheetIndex = 0;
   const dispatch = useDispatch();
-  const row = useSelector((state: Data) => state.data[sheetIndex].row);
-  const column = useSelector((state: Data) => state.data[sheetIndex].column);
-  const data = useSelector((state: Data) => state.data[sheetIndex].dataSheet);
+  const row = useSelector((state: IRootState) => state.sheetReducer.data[sheetIndex].row);
+  const column = useSelector((state: IRootState) => state.sheetReducer.data[sheetIndex].column);
+  const data = useSelector((state: IRootState) => state.sheetReducer.data[sheetIndex].dataSheet);
   const tableElement = useRef(null);
   const sparqlUrl = import.meta.env.VITE_PROJECT_WARE_SPARQL;
-
-  useEffect(() => {
-    if (data) {
-      getData.current = data;
-    }
-  }, [data]);
 
   useEffect(() => {
     if (inputIndex !== '' && inputIndex) {
