@@ -292,7 +292,7 @@ const App: FC = () => {
       </InputExtensionContainer>
       <AppContainer>
         <Reset />
-        <Sheet getData={getData} dataJson={dataJson} inputIndex={inputIndex} textInput={textInput} />
+        <Sheet getData={getData} dataJson={dataJson} inputIndex={inputIndex} textInput={textInput} setTextInput={setTextInput} />
       </AppContainer>
     </React.Fragment>
   );

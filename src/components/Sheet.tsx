@@ -14,11 +14,12 @@ interface SheetProps {
   dataJson: DataSheet | null;
   inputIndex: string;
   textInput: string;
+  setTextInput: (text: string) => void;
 }
 
 type CallbackType = (...args: any) => void;
 
-const Sheet: React.FC<SheetProps> = ({ getData, dataJson, textInput, inputIndex }) => {
+const Sheet: React.FC<SheetProps> = ({ getData, dataJson, textInput, inputIndex, setTextInput }) => {
   const sheetIndex = 0;
   const dispatch = useDispatch();
   const row = useSelector((state: Data) => state.data[sheetIndex].row);
@@ -74,8 +75,8 @@ const Sheet: React.FC<SheetProps> = ({ getData, dataJson, textInput, inputIndex 
       } else {
         const newData: DataSheet = { ...data };
         newData[`${row}${column}`] = value;
-        if (document.getElementById('long-text-input')) {
-          (document.getElementById('long-text-input') as any).value = value;
+        if (document.getElementById('long-text-input') && typeof value === 'string') {
+          setTextInput(value)
         }
         dispatch(setData(sheetIndex, newData));
       }
