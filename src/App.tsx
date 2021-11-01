@@ -110,6 +110,8 @@ const App: FC = () => {
   const submitChange = (): void => {
     if (tempRow < 2 || tempColumn < 2) {
       setToastObj({'type': 'error', 'message': 'Column and Row must be greater than 2', 'open': true});
+      setTempColumn(column - 1);
+      setTempRow(row - 1);
     } else {
       dispatch(changeRowAndColumn(sheetIndex, { row: tempRow + 1, column: tempColumn + 1 }));
     }
@@ -236,9 +238,7 @@ const App: FC = () => {
         if(!data || Object.keys(data).length === 0) {
           setToastObj({'type': 'error', 'message': 'Data must not be empty', 'open': true});
         } else {
-          const res = await saveSheetData(PROJECTERP_DATA_01, userId, "http://www.ekseli.fi/data", JSON.stringify(data), true)
-          console.log(res)
-          setToastObj(res);
+          setToastObj(await saveSheetData(PROJECTERP_DATA_01, userId, "http://www.ekseli.fi/data", JSON.stringify(data), true));
         }
       }
     }

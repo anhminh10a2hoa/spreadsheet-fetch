@@ -23,10 +23,10 @@ export async function saveSheetData(store:string,sheetUrl:string, cell:string,  
             method:"POST"
           }
         )
-        .then((response)=>response.json())
-        .then(jsonData=>{
-          console.log(jsonData);
-          return {'type': 'success', 'message': "Updated " +sheetUrl+ " data", 'open': true};
+        .then((response)=> {
+          if(response.status === 200) {
+            return {'type': 'success', 'message': "Updated " +sheetUrl+ " data", 'open': true}
+          }
         })
         .catch(exception=>{
           return {'type': 'error', 'message': "saveSheetData: "+exception, 'open': true}
