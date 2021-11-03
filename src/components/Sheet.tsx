@@ -17,7 +17,7 @@ interface SheetProps {
 
 type CallbackType = (...args: any) => void;
 
-const Sheet: React.FC<SheetProps> = ({  dataJson, textInput, inputIndex, setTextInput }) => {
+const Sheet: React.FC<SheetProps> = ({ dataJson, textInput, inputIndex, setTextInput }) => {
   const sheetIndex = 0;
   const dispatch = useDispatch();
   const row = useSelector((state: IRootState) => state.sheetReducer.data[sheetIndex].row);
@@ -68,7 +68,7 @@ const Sheet: React.FC<SheetProps> = ({  dataJson, textInput, inputIndex, setText
         const newData: DataSheet = { ...data };
         newData[`${row}${column}`] = value;
         if (typeof value === 'string') {
-          setTextInput(value)
+          setTextInput(value);
         }
         dispatch(setData(sheetIndex, newData));
       }
@@ -94,11 +94,11 @@ const Sheet: React.FC<SheetProps> = ({  dataJson, textInput, inputIndex, setText
       } else {
         const newData: DataSheet = { ...data };
         console.log(newData);
-        if(value !== "") {
+        if (value !== '') {
           newData[`${inputIndex}`] = value;
           dispatch(setData(sheetIndex, newData));
         } else {
-          delete newData[`${inputIndex}`]
+          delete newData[`${inputIndex}`];
           dispatch(setData(sheetIndex, newData));
         }
       }

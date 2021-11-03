@@ -52,7 +52,7 @@ const App: FC = () => {
   const menu = useSelector((state: IRootState) => state.userReducer.menu);
   const userAction = useSelector((state: IRootState) => state.userReducer.userAction);
   const focusedElement = useActiveElement() as HTMLInputElement | null;
-  const [toastObj, setToastObj] = useState<IToastObject>({type: "", message: "", open: false})
+  const [toastObj, setToastObj] = useState<IToastObject>({ type: '', message: '', open: false });
 
   useEffect(() => {
     if (focusedElement) {
@@ -65,35 +65,35 @@ const App: FC = () => {
 
   useEffect(() => {
     const searchKey = import.meta.env.VITE_SEARCH_KEY?.toString();
-    const searchQueryArray = window.location.search.split(searchKey + "&")
-    const userIdEncrypted = searchQueryArray.find((item) => item.includes('userId='))
-    const menuQuery = searchQueryArray.find((item) => item.includes('menu='))
-    const actionQuery = searchQueryArray.find((item) => item.includes('action='))
+    const searchQueryArray = window.location.search.split(searchKey + '&');
+    const userIdEncrypted = searchQueryArray.find((item) => item.includes('userId='));
+    const menuQuery = searchQueryArray.find((item) => item.includes('menu='));
+    const actionQuery = searchQueryArray.find((item) => item.includes('action='));
     let userId, menu, action;
-    if(userIdEncrypted && userIdEncrypted.includes('?userId=')) {
-      userId = userIdEncrypted.replace('?userId=', '')
-    } else if(userIdEncrypted && userIdEncrypted.includes('userId=')) {
-      userId = userIdEncrypted.replace('userId=', '')
+    if (userIdEncrypted && userIdEncrypted.includes('?userId=')) {
+      userId = userIdEncrypted.replace('?userId=', '');
+    } else if (userIdEncrypted && userIdEncrypted.includes('userId=')) {
+      userId = userIdEncrypted.replace('userId=', '');
     } else {
-      userId = ''
+      userId = '';
     }
-    if(menuQuery && menuQuery.includes('?menu=')) {
-      menu = menuQuery.replace('?menu=', '')
-    } else if(menuQuery && menuQuery.includes('menu=')) {
-      menu = menuQuery.replace('menu=', '')
+    if (menuQuery && menuQuery.includes('?menu=')) {
+      menu = menuQuery.replace('?menu=', '');
+    } else if (menuQuery && menuQuery.includes('menu=')) {
+      menu = menuQuery.replace('menu=', '');
     } else {
-      menu = ''
+      menu = '';
     }
-    if(actionQuery && actionQuery.includes('?action=')) {
-      action = actionQuery.replace('?action=', '')
-    } else if(actionQuery && actionQuery.includes('action=')) {
-      action = actionQuery.replace('action=', '')
+    if (actionQuery && actionQuery.includes('?action=')) {
+      action = actionQuery.replace('?action=', '');
+    } else if (actionQuery && actionQuery.includes('action=')) {
+      action = actionQuery.replace('action=', '');
     } else {
-      action = ''
+      action = '';
     }
-    
-    dispatch(setUserAction({userId: decryptUserId(userId), userAction: convertActionToEnumType(action), menu: menu}));
-  }, [])
+
+    dispatch(setUserAction({ userId: decryptUserId(userId), userAction: convertActionToEnumType(action), menu: menu }));
+  }, []);
 
   const handleChangeNumberOfRows = (event: InputEvent): void => {
     event.preventDefault();
@@ -109,7 +109,7 @@ const App: FC = () => {
 
   const submitChange = (): void => {
     if (tempRow < 2 || tempColumn < 2) {
-      setToastObj({'type': 'error', 'message': 'Column and Row must be greater than 2', 'open': true});
+      setToastObj({ type: 'error', message: 'Column and Row must be greater than 2', open: true });
       setTempColumn(column - 1);
       setTempRow(row - 1);
     } else {
@@ -166,7 +166,7 @@ const App: FC = () => {
   };
 
   const resetHandler = (): void => {
-    dispatch(resetSheet(sheetIndex))
+    dispatch(resetSheet(sheetIndex));
     setTextInput('');
     setTempRow(30);
     setTempColumn(30);
@@ -207,11 +207,11 @@ const App: FC = () => {
           const dataObj = JSON.parse(e.target?.result as string);
           setDataJson(dataObj);
         } else {
-          setToastObj({'type': 'error', 'message': 'Something went wrong with the file', 'open': true});
+          setToastObj({ type: 'error', message: 'Something went wrong with the file', open: true });
         }
       };
     } else {
-      setToastObj({'type': 'warning', 'message': 'Please import JSON file', 'open': true});
+      setToastObj({ type: 'warning', message: 'Please import JSON file', open: true });
     }
   };
 
@@ -229,20 +229,22 @@ const App: FC = () => {
     window.open('https://github.com/anhminh10a2hoa/spreadsheet-fetch', '_blank');
   };
 
-  const actionHandler = async(e: any) => {
+  const actionHandler = async (e: any) => {
     e.preventDefault();
-    if(PROJECTERP_DATA_01 && typeof PROJECTERP_DATA_01 == 'string') {
-      if(!userId || userId === '') {
-        setToastObj({'type': 'error', 'message': 'User id not found', 'open': true});
+    if (PROJECTERP_DATA_01 && typeof PROJECTERP_DATA_01 === 'string') {
+      if (!userId || userId === '') {
+        setToastObj({ type: 'error', message: 'User id not found', open: true });
       } else {
-        if(!data || Object.keys(data).length === 0) {
-          setToastObj({'type': 'error', 'message': 'Data must not be empty', 'open': true});
+        if (!data || Object.keys(data).length === 0) {
+          setToastObj({ type: 'error', message: 'Data must not be empty', open: true });
         } else {
-          setToastObj(await saveSheetData(PROJECTERP_DATA_01, userId, "http://www.ekseli.fi/data", JSON.stringify(data), true));
+          setToastObj(
+            await saveSheetData(PROJECTERP_DATA_01, userId, 'http://www.ekseli.fi/data', JSON.stringify(data), true)
+          );
         }
       }
     }
-  }
+  };
 
   return (
     <React.Fragment>
@@ -289,7 +291,7 @@ const App: FC = () => {
 
           <Tooltip title="Action">
             <IconButton color="inherit">
-              <ActionIcon onClick={actionHandler}/>
+              <ActionIcon onClick={actionHandler} />
             </IconButton>
           </Tooltip>
         </IconContainer>
@@ -323,10 +325,9 @@ const App: FC = () => {
         <Reset />
         <Sheet dataJson={dataJson} inputIndex={inputIndex} textInput={textInput} setTextInput={setTextInput} />
       </AppContainer>
-      <CustomizedSnackbars toastObj={toastObj}/>
+      <CustomizedSnackbars toastObj={toastObj} />
     </React.Fragment>
   );
 };
 
 export default App;
-
