@@ -13,7 +13,6 @@ export const userReducer = (state: IUserState = initialState, action: UserAction
   switch (action.type) {
     case 'SET_USER_ACTION': {
       const userId = action.payload.userId;
-      console.log(userId)
       const menu = action.payload.menu;
       const userAction = action.payload.menu;
       return { ...state, userId: userId, menu: menu, userAction: userAction };

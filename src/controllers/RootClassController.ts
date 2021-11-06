@@ -18,26 +18,25 @@ export async function saveSheetData(store:string,sheetUrl:string, cell:string,  
                             " insert {<"+sheetUrl+"><"+cell+"> '" + data + "'.}" 
                             //"<"+sheetUrl+"><http://www.ekseli.fi/EPOC>" + Date.now()+"}";  
         // alert(delete_insert_query);
-        await fetch(createSparqlUrl(store, delete_insert_query),
+        return await fetch(createSparqlUrl(store, delete_insert_query),
           {
             method:"POST"
           }
         )
         .then((response)=> {
-          if(response.status === 200) {
-            return {'type': 'success', 'message': "Updated " +sheetUrl+ " data", 'open': true}
-          }
+          if (!response.ok) {
+            return {'type': 'error', 'message': 'Something went wrong', 'open': true};
+          } 
+          return {'type': 'success', 'message': "Updated " +sheetUrl+ " data", 'open': true}
         })
-        .catch(exception=>{
-          return {'type': 'error', 'message': "saveSheetData: "+exception, 'open': true}
-        });
       //}
     }
     else{
-      return {'type': 'error', 'message': "Cannot save undefined sheet", 'open': true};
+      return {'type': 'error', 'message': 'Something went wrong', 'open': true};
     }
+  } else {
+    return {'type': 'error', 'message': 'Something went wrong', 'open': true};
   }
-  return {'type': 'warning', 'message': "Nothing happens", 'open': true};
 }
 
 /** Sometimes the query is used with graph=end point and mosttly with a specific aned point */

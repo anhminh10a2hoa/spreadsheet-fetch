@@ -93,7 +93,6 @@ const Sheet: React.FC<SheetProps> = ({  dataJson, textInput, inputIndex, setText
         });
       } else {
         const newData: DataSheet = { ...data };
-        console.log(newData);
         if(value !== "") {
           newData[`${inputIndex}`] = value;
           dispatch(setData(sheetIndex, newData));
