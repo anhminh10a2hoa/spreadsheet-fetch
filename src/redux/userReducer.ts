@@ -14,7 +14,7 @@ export const userReducer = (state: IUserState = initialState, action: UserAction
     case 'SET_USER_ACTION': {
       const userId = action.payload.userId;
       const menu = action.payload.menu;
-      const userAction = action.payload.menu;
+      const userAction = action.payload.userAction;
       return { ...state, userId: userId, menu: menu, userAction: userAction };
     }
     default:

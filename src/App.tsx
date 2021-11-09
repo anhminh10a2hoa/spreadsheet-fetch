@@ -238,7 +238,14 @@ const App: FC = () => {
         if(!data || Object.keys(data).length === 0) {
           setToastObj({'type': 'error', 'message': 'Data must not be empty', 'open': true});
         } else {
-          setToastObj(await saveSheetData(PROJECTERP_DATA_01, userId, "http://www.ekseli.fi/data", JSON.stringify(data), true));
+          if(userAction === 0) {
+            setToastObj(await saveSheetData(PROJECTERP_DATA_01, userId, "http://www.ekseli.fi/data", JSON.stringify(data), false));
+          } else if(userAction === 2) {
+            setToastObj(await saveSheetData(PROJECTERP_DATA_01, userId, "http://www.ekseli.fi/data", JSON.stringify(data), true));
+          }
+          else {
+            setToastObj({'type': 'error', 'message': 'Something went wrong', 'open': true});
+          }
         }
       }
     }
