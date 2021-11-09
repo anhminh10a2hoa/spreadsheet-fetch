@@ -27,7 +27,7 @@ export async function saveSheetData(store:string,sheetUrl:string, cell:string,  
           if (!response.ok) {
             return {'type': 'error', 'message': 'Something went wrong', 'open': true};
           } 
-          return {'type': 'success', 'message': "Updated " +sheetUrl+ " data", 'open': true}
+          return {'type': 'success', 'message': "Updated data successfully", 'open': true}
         })
       //}
     }
