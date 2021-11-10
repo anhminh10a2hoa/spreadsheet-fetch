@@ -15,21 +15,22 @@ interface SheetProps {
   inputIndex: string;
   textInput: string;
   sheetIndex: number;
+  setTextInput: (text: string) => void;
 }
 
 type CallbackType = (...args: any) => void;
 
-const Sheet: React.FC<SheetProps> = ({ getData, dataJson, textInput, inputIndex, sheetIndex }) => {
+const Sheet: React.FC<SheetProps> = ({ getData, dataJson, textInput, inputIndex, sheetIndex, setTextInput }) => {
   const dispatch = useDispatch();
   const [count, setCount] = useState(3);
   const [savedCount, setSavedCount] = useState([]);
   const saveCount = () => {
   setSavedCount(prev => [...prev, { id: count }]);
   };
-  const row = useSelector((state: Data) => state.data[sheetIndex].row);
-  const state = useSelector((state: Data) => state.data);
-  const column = useSelector((state: Data) => state.data[sheetIndex].column);
-  const data = useSelector((state: Data) => state.data[sheetIndex].dataSheet);
+  const row = useSelector((state: Data) => state.sheetReducer.data[sheetIndex].row);
+  const state = useSelector((state: Data) => state.sheetReducer.data);
+  const column = useSelector((state: Data) => state.sheetReducer.data[sheetIndex].column);
+  const data = useSelector((state: Data) => state.sheetReducer.data[sheetIndex].dataSheet);
   const tableElement = useRef(null);
   const sparqlUrl = import.meta.env.VITE_PROJECT_WARE_SPARQL;
 
@@ -54,7 +55,7 @@ const Sheet: React.FC<SheetProps> = ({ getData, dataJson, textInput, inputIndex,
   useEffect(() => {
     saveCount()
   }, [count]);
-
+console.log(data)
   const setCellValue = useCallback<CallbackType>(
     ({ row, column, value }: CellValueType) => {
       if (typeof value === 'string' && value.includes("fetch('") && value.includes("')")) {

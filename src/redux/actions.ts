@@ -39,7 +39,6 @@ export const deleteSheet = (id: number): DeleteSheetByIndexAction => ({
   payload: { id: id }
 });
 
-<<<<<<< HEAD
 export const resetSheet = (id: number): ResetSheetByIndexAction => ({
   type: 'RESET_SHEET_BY_INDEX',
   payload: { id: id }
@@ -52,10 +51,8 @@ export const setUserAction = (user: IUserState): UserChangeAction => ({
 
 export type SheetActions = ChangeRowColumnByIndexAction | SetDataByIndexAction | DeleteSheetByIndexAction | ResetSheetByIndexAction;
 export type UserActions = UserChangeAction;
-=======
 export const addSheet = () => ({
   type: 'ADD_SHEET',
 });
 
 export type Actions = ChangeRowColumnByIndexAction | SetDataByIndexAction | DeleteSheetByIndexAction;
->>>>>>> bugfix/fix-simple-input-function

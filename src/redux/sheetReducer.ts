@@ -47,11 +47,11 @@ export const sheetReducer = (state: ISheetState = initialState, action: SheetAct
       newData[id].dataSheet = {}
       newData[id].row = 31
       newData[id].column = 31
-    },
+    }
     case 'ADD_SHEET': {
       const newData = [...state.data, { row: 31, column: 31, dataSheet: {}, id: (state.data.length - 1) }]
       return { ...state, data: newData };
-    },
+    }
     default:
       return state;
   }

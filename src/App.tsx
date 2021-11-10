@@ -38,21 +38,13 @@ import CustomizedSnackbars from '@components/alert/CustomizedSnackbars';
 
 const App: FC = () => {
   const dispatch = useDispatch();
-<<<<<<< HEAD
-  const sheetIndex = 0;
-  const row = useSelector((state: IRootState) => state.sheetReducer.data[sheetIndex].row);
-  const column = useSelector((state: IRootState) => state.sheetReducer.data[sheetIndex].column);
-  const data = useSelector((state: IRootState) => state.sheetReducer.data[sheetIndex].dataSheet);
-=======
   const url = window.location.pathname;
   const name = url.substring(url.lastIndexOf('/')+1);
   const sheetIndex = name === '' ? 0 : (name - 1);
-  
-  const row = useSelector((state: Data) => state.data[sheetIndex].row);
-  const column = useSelector((state: Data) => state.data[sheetIndex].column);
-  const data = useSelector((state: Data) => state.data[sheetIndex].dataSheet);
+  const row = useSelector((state: Data) => state.sheetReducer.data[sheetIndex].row);
+  const column = useSelector((state: Data) => state.sheetReducer.data[sheetIndex].column);
+  const data = useSelector((state: Data) => state.sheetReducer.data[sheetIndex].dataSheet);
 
->>>>>>> bugfix/fix-simple-input-function
   const [tempRow, setTempRow] = useState<number>(row - 1);
   const [tempColumn, setTempColumn] = useState<number>(column - 1);
   const [fileName] = useState<string>('sheet ' + sheetIndex);
@@ -347,11 +339,7 @@ const App: FC = () => {
       </InputExtensionContainer>
       <AppContainer>
         <Reset />
-<<<<<<< HEAD
-        <Sheet dataJson={dataJson} inputIndex={inputIndex} textInput={textInput} setTextInput={setTextInput} />
-=======
-        <Sheet sheetIndex={sheetIndex} getData={data} dataJson={dataJson} inputIndex={inputIndex} textInput={textInput} />
->>>>>>> bugfix/fix-simple-input-function
+        <Sheet sheetIndex={sheetIndex} getData={data} dataJson={dataJson} inputIndex={inputIndex} textInput={textInput} setTextInput={setTextInput} />
       </AppContainer>
       <CustomizedSnackbars toastObj={toastObj}/>
     </React.Fragment>

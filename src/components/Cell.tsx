@@ -26,8 +26,8 @@ enum KeyCode {
 type CallbackType = (...args: any) => void;
 
 const Cell: React.FC<CellProps> = ({ rowIndex, columnIndex, columnName, setCellValue, computeCell, currentValue, sheetIndex }) => {
-  const row = useSelector((state: Data) => state.data[sheetIndex].row);
-  const column = useSelector((state: Data) => state.data[sheetIndex].column);
+  const row = useSelector((state: Data) => state.sheetReducer.data[sheetIndex].row);
+  const column = useSelector((state: Data) => state.sheetReducer.data[sheetIndex].column);
   const [edit, setEdit] = useState<boolean>(false);
 
   const value = React.useMemo<any>(() => {
