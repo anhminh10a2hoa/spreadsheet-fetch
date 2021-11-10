@@ -1,28 +1,35 @@
-import React, { Fragment, useEffect, useRef, useCallback } from 'react';
+import React, { Fragment, useEffect, useRef, useCallback, useState } from 'react';
 import axios from 'axios';
-import { Sheet as StyledSheet } from '@themes';
-
+import IconButton from '@mui/material/IconButton';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import { Sheet as StyledSheet, BottomNavBar, SheetLink } from '@themes';
+import { BrowserRouter as Router } from "react-router-dom";
 import { getColumnName } from '@utils/helper';
 import Cell from './Cell';
 
 import { CellValueType, DataSheet, CellValueTypeByIndex, IRootState } from '@types';
 import { useDispatch, useSelector } from 'react-redux';
-import { setData } from '@redux/actions';
+import { setData, addSheet } from '@redux/actions';
 interface SheetProps {
   dataJson: DataSheet | null;
   inputIndex: string;
   textInput: string;
-  setTextInput: (text: string) => void;
+  sheetIndex: number;
 }
 
 type CallbackType = (...args: any) => void;
 
-const Sheet: React.FC<SheetProps> = ({  dataJson, textInput, inputIndex, setTextInput }) => {
-  const sheetIndex = 0;
+const Sheet: React.FC<SheetProps> = ({ getData, dataJson, textInput, inputIndex, sheetIndex }) => {
   const dispatch = useDispatch();
-  const row = useSelector((state: IRootState) => state.sheetReducer.data[sheetIndex].row);
-  const column = useSelector((state: IRootState) => state.sheetReducer.data[sheetIndex].column);
-  const data = useSelector((state: IRootState) => state.sheetReducer.data[sheetIndex].dataSheet);
+  const [count, setCount] = useState(3);
+  const [savedCount, setSavedCount] = useState([]);
+  const saveCount = () => {
+  setSavedCount(prev => [...prev, { id: count }]);
+  };
+  const row = useSelector((state: Data) => state.data[sheetIndex].row);
+  const state = useSelector((state: Data) => state.data);
+  const column = useSelector((state: Data) => state.data[sheetIndex].column);
+  const data = useSelector((state: Data) => state.data[sheetIndex].dataSheet);
   const tableElement = useRef(null);
   const sparqlUrl = import.meta.env.VITE_PROJECT_WARE_SPARQL;
 
@@ -43,6 +50,10 @@ const Sheet: React.FC<SheetProps> = ({  dataJson, textInput, inputIndex, setText
       }
     }
   }, [dataJson]);
+
+  useEffect(() => {
+    saveCount()
+  }, [count]);
 
   const setCellValue = useCallback<CallbackType>(
     ({ row, column, value }: CellValueType) => {
@@ -137,7 +148,15 @@ const Sheet: React.FC<SheetProps> = ({  dataJson, textInput, inputIndex, setText
     [data]
   );
 
+  const setSheetCounter = () => {
+    setCount(count + 1)
+    dispatch(addSheet())
+  }
+  console.log();
+  
+
   return (
+    <>
     <StyledSheet numberOfColumns={column} ref={tableElement}>
       {Array(row)
         .fill(0)
@@ -150,6 +169,7 @@ const Sheet: React.FC<SheetProps> = ({  dataJson, textInput, inputIndex, setText
                   const columnName: string = getColumnName(j);
                   return (
                     <Cell
+                      sheetIndex={sheetIndex}
                       rowIndex={i}
                       columnIndex={j}
                       columnName={columnName}
@@ -164,6 +184,21 @@ const Sheet: React.FC<SheetProps> = ({  dataJson, textInput, inputIndex, setText
           );
         })}
     </StyledSheet>
+    <BottomNavBar>
+    <Router>
+    <SheetLink to="/" >Sheet 1</SheetLink>
+    <SheetLink to="2">Sheet 2</SheetLink>
+    <SheetLink to="3">Sheet 3</SheetLink>
+    {savedCount.filter((_, index) => index !== 0 ).map((c, index) => (
+      <SheetLink to={c.id.toString()}>Sheet {c.id}</SheetLink>
+    ))}
+    </Router>
+    <IconButton aria-label="add" size="large">
+        <AddCircleOutlineIcon size="large" color='info' onClick={() => setSheetCounter()}>
+        </AddCircleOutlineIcon>
+    </IconButton>
+    </BottomNavBar>
+    </>
   );
 };
 

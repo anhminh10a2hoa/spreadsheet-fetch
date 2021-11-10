@@ -3,7 +3,7 @@ import './App.css';
 import { Reset } from 'styled-reset';
 
 import Tooltip from '@mui/material/Tooltip';
-import { getColumnIndex, getColumnName, useActiveElement } from '@utils/helper';
+import { getColumnIndex, useActiveElement } from '@utils/helper';
 import Sheet from '@components/Sheet';
 import IconButton from '@mui/material/IconButton';
 import { InputEvent, DownloadFileType, DataSheet, IRootState, IToastObject } from '@types';
@@ -38,10 +38,21 @@ import CustomizedSnackbars from '@components/alert/CustomizedSnackbars';
 
 const App: FC = () => {
   const dispatch = useDispatch();
+<<<<<<< HEAD
   const sheetIndex = 0;
   const row = useSelector((state: IRootState) => state.sheetReducer.data[sheetIndex].row);
   const column = useSelector((state: IRootState) => state.sheetReducer.data[sheetIndex].column);
   const data = useSelector((state: IRootState) => state.sheetReducer.data[sheetIndex].dataSheet);
+=======
+  const url = window.location.pathname;
+  const name = url.substring(url.lastIndexOf('/')+1);
+  const sheetIndex = name === '' ? 0 : (name - 1);
+  
+  const row = useSelector((state: Data) => state.data[sheetIndex].row);
+  const column = useSelector((state: Data) => state.data[sheetIndex].column);
+  const data = useSelector((state: Data) => state.data[sheetIndex].dataSheet);
+
+>>>>>>> bugfix/fix-simple-input-function
   const [tempRow, setTempRow] = useState<number>(row - 1);
   const [tempColumn, setTempColumn] = useState<number>(column - 1);
   const [fileName] = useState<string>('sheet ' + sheetIndex);
@@ -143,24 +154,32 @@ const App: FC = () => {
       const firstColumn: string = firstKey.toString().substring(firstRow.toString().length, firstKey.length);
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const lastRow: number = parseInt(lastKey.match(/^\d+|\d+\b|\d+(?=\w)/g)![0]);
+      console.log(lastKey);
+      
       const lastColumn: string = lastKey.toString().substring(lastRow.toString().length, lastKey.length);
       const newData: DataSheet = {};
       for (const item in data) {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const row = parseInt(item.match(/^\d+|\d+\b|\d+(?=\w)/g)![0]);
         const column = item.toString().substring(row.toString().length, item.length);
-        newData[`${row - firstRow + 1}${getColumnName(getColumnIndex(column) - getColumnIndex('A') - 1)}`] = data[item];
+
+        newData[`${row - firstRow + 1}${column}`] = data[item];
       }
+      console.log({newData});
+      
       dispatch(setData(sheetIndex, newData));
       const startRow = lastRow - firstRow === 0 ? 2 : lastRow - firstRow + 1;
+      console.log({lastRow});
+      
       const startCol =
         getColumnIndex(lastColumn) - getColumnIndex(firstColumn) === 0
           ? 2
           : getColumnIndex(lastColumn) - getColumnIndex(firstColumn) + 1;
+          console.log({startCol});
       if (row !== startRow || column !== startCol) {
-        dispatch(changeRowAndColumn(sheetIndex, { row: startRow, column: startCol }));
-        setTempRow(startRow - 1);
-        setTempColumn(startCol - 1);
+        dispatch(changeRowAndColumn(sheetIndex, { row: startRow + 1, column: startCol + 1}));
+        setTempRow(startRow);
+        setTempColumn(startCol);
       }
     }
   };
@@ -319,7 +338,7 @@ const App: FC = () => {
             </IconButton>
           </Tooltip>
         </SetupContainer>
-        <Title>Spreadsheet - {fileName}</Title>
+        <Title>Spreadsheet - {name === '' ? 1 : name}</Title>
       </Navbar>
       <InputExtensionContainer>
         <IndexInput type="text" value={inputIndex} onChange={inputIndexHandler} />
@@ -328,7 +347,11 @@ const App: FC = () => {
       </InputExtensionContainer>
       <AppContainer>
         <Reset />
+<<<<<<< HEAD
         <Sheet dataJson={dataJson} inputIndex={inputIndex} textInput={textInput} setTextInput={setTextInput} />
+=======
+        <Sheet sheetIndex={sheetIndex} getData={data} dataJson={dataJson} inputIndex={inputIndex} textInput={textInput} />
+>>>>>>> bugfix/fix-simple-input-function
       </AppContainer>
       <CustomizedSnackbars toastObj={toastObj}/>
     </React.Fragment>

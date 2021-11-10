@@ -13,6 +13,7 @@ interface CellProps {
   // type check
   computeCell: (...args: any) => void;
   currentValue: number;
+  sheetIndex: number;
 }
 
 enum KeyCode {
@@ -24,11 +25,9 @@ enum KeyCode {
 
 type CallbackType = (...args: any) => void;
 
-const Cell: React.FC<CellProps> = ({ rowIndex, columnIndex, columnName, setCellValue, computeCell, currentValue }) => {
-  const sheetIndex = 0;
-  const row = useSelector((state: IRootState) => state.sheetReducer.data[sheetIndex].row);
-  const column = useSelector((state: IRootState) => state.sheetReducer.data[sheetIndex].column);
-  const data = useSelector((state: IRootState) => state.sheetReducer.data[sheetIndex].dataSheet);
+const Cell: React.FC<CellProps> = ({ rowIndex, columnIndex, columnName, setCellValue, computeCell, currentValue, sheetIndex }) => {
+  const row = useSelector((state: Data) => state.data[sheetIndex].row);
+  const column = useSelector((state: Data) => state.data[sheetIndex].column);
   const [edit, setEdit] = useState<boolean>(false);
 
   const value = React.useMemo<any>(() => {
