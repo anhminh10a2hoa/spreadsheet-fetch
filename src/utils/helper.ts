@@ -10,6 +10,7 @@ export const getColumnName: (index: number) => string = (index) => {
   if (i === 0 && parseInt(subIndex) > 0) {
     return 'Z' + (parseInt(subIndex) - 1).toString();
   }
+  console.log(String.fromCharCode('A'.charCodeAt(0) + i - 1) + subIndex)
   return String.fromCharCode('A'.charCodeAt(0) + i - 1) + subIndex;
 };
 
