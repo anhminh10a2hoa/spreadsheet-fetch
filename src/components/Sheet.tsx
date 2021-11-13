@@ -20,17 +20,16 @@ interface SheetProps {
 
 type CallbackType = (...args: any) => void;
 
-const Sheet: React.FC<SheetProps> = ({ getData, dataJson, textInput, inputIndex, sheetIndex, setTextInput }) => {
+const Sheet: React.FC<SheetProps> = ({ dataJson, textInput, inputIndex, sheetIndex, setTextInput }) => {
   const dispatch = useDispatch();
   const [count, setCount] = useState(3);
-  const [savedCount, setSavedCount] = useState([]);
+  const [savedCount, setSavedCount] = useState<any>([]);
   const saveCount = () => {
-  setSavedCount(prev => [...prev, { id: count }]);
+    setSavedCount(prev => [...prev, { id: count }]);
   };
-  const row = useSelector((state: Data) => state.sheetReducer.data[sheetIndex].row);
-  const state = useSelector((state: Data) => state.sheetReducer.data);
-  const column = useSelector((state: Data) => state.sheetReducer.data[sheetIndex].column);
-  const data = useSelector((state: Data) => state.sheetReducer.data[sheetIndex].dataSheet);
+  const row = useSelector((state: IRootState) => state.sheetReducer.data[sheetIndex].row);
+  const column = useSelector((state: IRootState) => state.sheetReducer.data[sheetIndex].column);
+  const data = useSelector((state: IRootState) => state.sheetReducer.data[sheetIndex].dataSheet);
   const tableElement = useRef(null);
   const sparqlUrl = import.meta.env.VITE_PROJECT_WARE_SPARQL;
 
@@ -190,13 +189,12 @@ console.log(data)
     <SheetLink to="/" >Sheet 1</SheetLink>
     <SheetLink to="2">Sheet 2</SheetLink>
     <SheetLink to="3">Sheet 3</SheetLink>
-    {savedCount.filter((_, index) => index !== 0 ).map((c, index) => (
+    {savedCount.filter((_, index: number) => index !== 0 ).map((c, i: number) => (
       <SheetLink to={c.id.toString()}>Sheet {c.id}</SheetLink>
     ))}
     </Router>
     <IconButton aria-label="add" size="large">
-        <AddCircleOutlineIcon size="large" color='info' onClick={() => setSheetCounter()}>
-        </AddCircleOutlineIcon>
+        <AddCircleOutlineIcon size="large" color='info' onClick={() => setSheetCounter()} />
     </IconButton>
     </BottomNavBar>
     </>
