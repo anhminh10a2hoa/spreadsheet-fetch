@@ -68,7 +68,7 @@ console.log(data)
               for (const prop in element) {
                 const rowI: number = row + index;
                 const columnI: number = 64 - i;
-                fetchData[`${rowI}${getColumnName(column.charCodeAt(0) - columnI)}`] = element[prop].value;
+                fetchData[`${getColumnName(column.charCodeAt(0) - columnI)}${rowI}`] = element[prop].value;
                 i++;
               }
             }
@@ -77,7 +77,7 @@ console.log(data)
         });
       } else {
         const newData: DataSheet = { ...data };
-        newData[`${row}${column}`] = value;
+        newData[`${column}${row}`] = value;
         if (typeof value === 'string') {
           setTextInput(value)
         }
@@ -118,7 +118,7 @@ console.log(data)
 
   const computeCell = useCallback<CallbackType>(
     ({ row, column }: CellValueType) => {
-      const cellContent: string | undefined = data[`${row}${column}`];
+      const cellContent: string | undefined = data[`${column}${row}`];
       if (cellContent) {
         if (cellContent?.charAt(0) === '=') {
           // This regex converts = "A1+A2" to ["A1","+","A2"]
@@ -174,7 +174,7 @@ console.log(data)
                       columnIndex={j}
                       columnName={columnName}
                       setCellValue={setCellValue}
-                      currentValue={data[`${i}${columnName}`]}
+                      currentValue={data[`${columnName}${i}`]}
                       computeCell={computeCell}
                       key={`${columnName}${i}`}
                     />

@@ -49,10 +49,8 @@ export const setUserAction = (user: IUserState): UserChangeAction => ({
   payload: user
 });
 
-export type SheetActions = ChangeRowColumnByIndexAction | SetDataByIndexAction | DeleteSheetByIndexAction | ResetSheetByIndexAction;
+export type SheetActions = ChangeRowColumnByIndexAction | SetDataByIndexAction | DeleteSheetByIndexAction | ResetSheetByIndexAction ;
 export type UserActions = UserChangeAction;
 export const addSheet = () => ({
   type: 'ADD_SHEET',
 });
-
-export type Actions = ChangeRowColumnByIndexAction | SetDataByIndexAction | DeleteSheetByIndexAction;
