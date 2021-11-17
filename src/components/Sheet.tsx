@@ -126,7 +126,7 @@ console.log(data)
           let subStitutedExpression = '';
           expression.forEach((item: any) => {
             // Regex to test if it is of form alphabet followed by number ex: A1
-            if (/^[0-9].*[A-z]$/g.test(item || '')) {
+            if (/^[A-z][0-9]$/g.test(item || "")) {
               subStitutedExpression += data[(item || '').toUpperCase()] || 0;
             } else {
               subStitutedExpression += item;
