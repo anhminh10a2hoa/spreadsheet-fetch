@@ -54,7 +54,7 @@ const Sheet: React.FC<SheetProps> = ({ dataJson, textInput, inputIndex, sheetInd
   useEffect(() => {
     saveCount()
   }, [count]);
-console.log(data)
+
   const setCellValue = useCallback<CallbackType>(
     ({ row, column, value }: CellValueType) => {
       if (typeof value === 'string' && value.includes("fetch('") && value.includes("')")) {
@@ -152,8 +152,6 @@ console.log(data)
     setCount(count + 1)
     dispatch(addSheet())
   }
-  console.log();
-  
 
   return (
     <>
@@ -186,11 +184,11 @@ console.log(data)
     </StyledSheet>
     <BottomNavBar>
     <Router>
-    <SheetLink to="/" >Sheet 1</SheetLink>
-    <SheetLink to="2">Sheet 2</SheetLink>
-    <SheetLink to="3">Sheet 3</SheetLink>
-    {savedCount.filter((_, index: number) => index !== 0 ).map((c, i: number) => (
-      <SheetLink to={c.id.toString()}>Sheet {c.id}</SheetLink>
+    <SheetLink to="1" activeClassName="any">Sheet 1</SheetLink>
+    <SheetLink to="2" activeClassName="any">Sheet 2</SheetLink>
+    <SheetLink to="3" activeClassName="any">Sheet 3</SheetLink>
+    {savedCount.filter((_, index) => index !== 0 ).map((c, index) => (
+      <SheetLink to={c.id.toString()} activeClassName="any">Sheet {c.id}</SheetLink>
     ))}
     </Router>
     <IconButton aria-label="add" size="large">

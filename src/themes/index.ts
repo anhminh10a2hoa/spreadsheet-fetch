@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { AiOutlineSave, AiFillFolderOpen, AiOutlineReload, AiFillPlayCircle, AiFillBulb, AiFillEdit, AiOutlineHolder, AiOutlineInsertRowAbove, AiOutlineInsertRowLeft, AiFillGithub, AiOutlineCode } from "react-icons/ai";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 interface SheetProps {
   numberOfColumns: number;
 }
@@ -198,7 +198,7 @@ export const BottomNavBar = styled.div`
   }
 `
 
-export const SheetLink = styled(Link)`
+export const SheetLink = styled(NavLink)`
   float: left;
   display: block;
   color: #f2f2f2;
@@ -206,11 +206,11 @@ export const SheetLink = styled(Link)`
   padding: 14px 16px;
   text-decoration: none;
   font-size: 17px;
-  :hover {
+  :hover,.active,:active {
     background-color: #ddd;
     color: black;
   }
-  :active {
+  &.${props => props.activeClassName} {
     background-color: #ddd;
     color: black;
   }
