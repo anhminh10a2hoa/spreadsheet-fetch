@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, FC } from 'react';
 import './App.css';
 import { Reset } from 'styled-reset';
-
+import { useLocation } from 'react-router-dom';
 import Tooltip from '@mui/material/Tooltip';
 import { getColumnIndex, useActiveElement } from '@utils/helper';
 import Sheet from '@components/Sheet';
@@ -38,9 +38,10 @@ import CustomizedSnackbars from '@components/alert/CustomizedSnackbars';
 
 const App: FC = () => {
   const dispatch = useDispatch();
-  const url = window.location.pathname;
+  const url = useLocation().pathname;
   const name = url.substring(url.lastIndexOf('/')+1);
   const sheetIndex = name === '' ? 0 : (parseInt(name) - 1);
+
   const row = useSelector((state: IRootState) => state.sheetReducer.data[sheetIndex].row);
   const column = useSelector((state: IRootState) => state.sheetReducer.data[sheetIndex].column);
   const data = useSelector((state: IRootState) => state.sheetReducer.data[sheetIndex].dataSheet);

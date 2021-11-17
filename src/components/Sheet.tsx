@@ -183,14 +183,14 @@ const Sheet: React.FC<SheetProps> = ({ dataJson, textInput, inputIndex, sheetInd
         })}
     </StyledSheet>
     <BottomNavBar>
-    <Router>
-    <SheetLink to="1" activeClassName="any">Sheet 1</SheetLink>
-    <SheetLink to="2" activeClassName="any">Sheet 2</SheetLink>
-    <SheetLink to="3" activeClassName="any">Sheet 3</SheetLink>
+
+    <SheetLink exact="true" activeClassName="active" to="/">Sheet 1</SheetLink>
+    <SheetLink exact="true" activeClassName="active" to="/2">Sheet 2</SheetLink>
+    <SheetLink exact="true" activeClassName="active" to="/3">Sheet 3</SheetLink>
     {savedCount.filter((_, index) => index !== 0 ).map((c, index) => (
-      <SheetLink to={c.id.toString()} activeClassName="any">Sheet {c.id}</SheetLink>
+      <SheetLink to={c.id.toString()} exact="true" activeClassName="active">Sheet {c.id}</SheetLink>
     ))}
-    </Router>
+
     <IconButton aria-label="add" size="large">
         <AddCircleOutlineIcon size="large" color='info' onClick={() => setSheetCounter()} />
     </IconButton>
