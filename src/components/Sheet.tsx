@@ -1,25 +1,32 @@
-import React, { Fragment, useEffect, useRef, useCallback } from 'react';
+import React, { Fragment, useEffect, useRef, useCallback, useState } from 'react';
 import axios from 'axios';
-import { Sheet as StyledSheet } from '@themes';
-
+import IconButton from '@mui/material/IconButton';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import { Sheet as StyledSheet, BottomNavBar, SheetLink } from '@themes';
+import { BrowserRouter as Router } from 'react-router-dom';
 import { getColumnName } from '@utils/helper';
 import Cell from './Cell';
 
 import { CellValueType, DataSheet, CellValueTypeByIndex, IRootState } from '@types';
 import { useDispatch, useSelector } from 'react-redux';
-import { setData } from '@redux/actions';
+import { setData, addSheet } from '@redux/actions';
 interface SheetProps {
   dataJson: DataSheet | null;
   inputIndex: string;
   textInput: string;
+  sheetIndex: number;
   setTextInput: (text: string) => void;
 }
 
 type CallbackType = (...args: any) => void;
 
-const Sheet: React.FC<SheetProps> = ({ dataJson, textInput, inputIndex, setTextInput }) => {
-  const sheetIndex = 0;
+const Sheet: React.FC<SheetProps> = ({ dataJson, textInput, inputIndex, sheetIndex, setTextInput }) => {
   const dispatch = useDispatch();
+  const [count, setCount] = useState(3);
+  const [savedCount, setSavedCount] = useState<any>([]);
+  const saveCount = () => {
+    setSavedCount((prev) => [...prev, { id: count }]);
+  };
   const row = useSelector((state: IRootState) => state.sheetReducer.data[sheetIndex].row);
   const column = useSelector((state: IRootState) => state.sheetReducer.data[sheetIndex].column);
   const data = useSelector((state: IRootState) => state.sheetReducer.data[sheetIndex].dataSheet);
@@ -44,6 +51,10 @@ const Sheet: React.FC<SheetProps> = ({ dataJson, textInput, inputIndex, setTextI
     }
   }, [dataJson]);
 
+  useEffect(() => {
+    saveCount();
+  }, [count]);
+
   const setCellValue = useCallback<CallbackType>(
     ({ row, column, value }: CellValueType) => {
       if (typeof value === 'string' && value.includes("fetch('") && value.includes("')")) {
@@ -57,7 +68,7 @@ const Sheet: React.FC<SheetProps> = ({ dataJson, textInput, inputIndex, setTextI
               for (const prop in element) {
                 const rowI: number = row + index;
                 const columnI: number = 64 - i;
-                fetchData[`${rowI}${getColumnName(column.charCodeAt(0) - columnI)}`] = element[prop].value;
+                fetchData[`${getColumnName(column.charCodeAt(0) - columnI)}${rowI}`] = element[prop].value;
                 i++;
               }
             }
@@ -66,7 +77,7 @@ const Sheet: React.FC<SheetProps> = ({ dataJson, textInput, inputIndex, setTextI
         });
       } else {
         const newData: DataSheet = { ...data };
-        newData[`${row}${column}`] = value;
+        newData[`${column}${row}`] = value;
         if (typeof value === 'string') {
           setTextInput(value);
         }
@@ -93,7 +104,6 @@ const Sheet: React.FC<SheetProps> = ({ dataJson, textInput, inputIndex, setTextI
         });
       } else {
         const newData: DataSheet = { ...data };
-        console.log(newData);
         if (value !== '') {
           newData[`${inputIndex}`] = value;
           dispatch(setData(sheetIndex, newData));
@@ -108,7 +118,7 @@ const Sheet: React.FC<SheetProps> = ({ dataJson, textInput, inputIndex, setTextI
 
   const computeCell = useCallback<CallbackType>(
     ({ row, column }: CellValueType) => {
-      const cellContent: string | undefined = data[`${row}${column}`];
+      const cellContent: string | undefined = data[`${column}${row}`];
       if (cellContent) {
         if (cellContent?.charAt(0) === '=') {
           // This regex converts = "A1+A2" to ["A1","+","A2"]
@@ -116,7 +126,7 @@ const Sheet: React.FC<SheetProps> = ({ dataJson, textInput, inputIndex, setTextI
           let subStitutedExpression = '';
           expression.forEach((item: any) => {
             // Regex to test if it is of form alphabet followed by number ex: A1
-            if (/^[0-9].*[A-z]$/g.test(item || '')) {
+            if (/^[A-z].*[0-9].*$/g.test(item || '')) {
               subStitutedExpression += data[(item || '').toUpperCase()] || 0;
             } else {
               subStitutedExpression += item;
@@ -138,33 +148,63 @@ const Sheet: React.FC<SheetProps> = ({ dataJson, textInput, inputIndex, setTextI
     [data]
   );
 
+  const setSheetCounter = () => {
+    setCount(count + 1);
+    dispatch(addSheet());
+  };
+
   return (
-    <StyledSheet numberOfColumns={column} ref={tableElement}>
-      {Array(row)
-        .fill(0)
-        .map((_, i: number) => {
-          return (
-            <Fragment key={i}>
-              {Array(column)
-                .fill(0)
-                .map((_, j: number) => {
-                  const columnName: string = getColumnName(j);
-                  return (
-                    <Cell
-                      rowIndex={i}
-                      columnIndex={j}
-                      columnName={columnName}
-                      setCellValue={setCellValue}
-                      currentValue={data[`${i}${columnName}`]}
-                      computeCell={computeCell}
-                      key={`${columnName}${i}`}
-                    />
-                  );
-                })}
-            </Fragment>
-          );
-        })}
-    </StyledSheet>
+    <>
+      <StyledSheet numberOfColumns={column} ref={tableElement}>
+        {Array(row)
+          .fill(0)
+          .map((_, i: number) => {
+            return (
+              <Fragment key={i}>
+                {Array(column)
+                  .fill(0)
+                  .map((_, j: number) => {
+                    const columnName: string = getColumnName(j);
+                    return (
+                      <Cell
+                        sheetIndex={sheetIndex}
+                        rowIndex={i}
+                        columnIndex={j}
+                        columnName={columnName}
+                        setCellValue={setCellValue}
+                        currentValue={data[`${columnName}${i}`]}
+                        computeCell={computeCell}
+                        key={`${columnName}${i}`}
+                      />
+                    );
+                  })}
+              </Fragment>
+            );
+          })}
+      </StyledSheet>
+      <BottomNavBar>
+        <SheetLink exact="true" activeClassName="active" to="/">
+          Sheet 1
+        </SheetLink>
+        <SheetLink exact="true" activeClassName="active" to="/2">
+          Sheet 2
+        </SheetLink>
+        <SheetLink exact="true" activeClassName="active" to="/3">
+          Sheet 3
+        </SheetLink>
+        {savedCount
+          .filter((_, index) => index !== 0)
+          .map((c, index) => (
+            <SheetLink to={c.id.toString()} exact="true" activeClassName="active">
+              Sheet {c.id}
+            </SheetLink>
+          ))}
+
+        <IconButton aria-label="add" size="large">
+          <AddCircleOutlineIcon size="large" color="info" onClick={() => setSheetCounter()} />
+        </IconButton>
+      </BottomNavBar>
+    </>
   );
 };
 

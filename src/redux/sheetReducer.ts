@@ -5,7 +5,7 @@ import { SheetActions } from './actions';
 const initialState: ISheetState = {
   data:
     localStorage.getItem('data') === null
-      ? [{ row: 31, column: 31, dataSheet: {}, id: 0 }]
+      ? [{ row: 31, column: 31, dataSheet: {}, id: 0 },{ row: 31, column: 31, dataSheet: {}, id: 1 }, { row: 31, column: 31, dataSheet: {}, id: 2 }]
       : JSON.parse(localStorage.getItem('data')!)
 };
 
@@ -17,20 +17,19 @@ export const sheetReducer = (state: ISheetState = initialState, action: SheetAct
       if (state.data) {
         const objIndex = state.data.findIndex((x) => x.id === id);
         if (newData) {
-          newData[objIndex].row = action.payload.rowAndColumn.row;
-          newData[objIndex].column = action.payload.rowAndColumn.column;
+          newData[id].row = action.payload.rowAndColumn.row;
+          newData[id].column = action.payload.rowAndColumn.column;
         }
       }
-      localStorage.setItem('data', JSON.stringify(newData));
+      //localStorage.setItem('data', JSON.stringify(newData));
       return { ...state, data: newData };
     }
     case 'SET_DATA_BY_INDEX': {
       const id = action.payload.id;
       const newData = state.data;
       if (state.data) {
-        const objIndex = state.data.findIndex((x) => x.id === id);
         if (newData) {
-          newData[objIndex].dataSheet = action.payload.data;
+          newData[id].dataSheet = action.payload.data;
         }
       }
       localStorage.setItem('data', JSON.stringify(newData));
@@ -48,6 +47,9 @@ export const sheetReducer = (state: ISheetState = initialState, action: SheetAct
       newData[id].dataSheet = {}
       newData[id].row = 31
       newData[id].column = 31
+    }
+    case 'ADD_SHEET': {
+      const newData = [...state.data, { row: 31, column: 31, dataSheet: {}, id: (state.data.length - 1) }]
       return { ...state, data: newData };
     }
     default:

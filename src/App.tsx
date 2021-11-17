@@ -1,9 +1,9 @@
 import React, { useState, useRef, useEffect, FC } from 'react';
 import './App.css';
 import { Reset } from 'styled-reset';
-
+import { useLocation } from 'react-router-dom';
 import Tooltip from '@mui/material/Tooltip';
-import { getColumnIndex, getColumnName, useActiveElement } from '@utils/helper';
+import { getColumnIndex, useActiveElement } from '@utils/helper';
 import Sheet from '@components/Sheet';
 import IconButton from '@mui/material/IconButton';
 import { InputEvent, DownloadFileType, DataSheet, IRootState, IToastObject } from '@types';
@@ -38,10 +38,14 @@ import CustomizedSnackbars from '@components/alert/CustomizedSnackbars';
 
 const App: FC = () => {
   const dispatch = useDispatch();
-  const sheetIndex = 0;
+  const url = useLocation().pathname;
+  const name = url.substring(url.lastIndexOf('/') + 1);
+  const sheetIndex = name === '' ? 0 : parseInt(name) - 1;
+
   const row = useSelector((state: IRootState) => state.sheetReducer.data[sheetIndex].row);
   const column = useSelector((state: IRootState) => state.sheetReducer.data[sheetIndex].column);
   const data = useSelector((state: IRootState) => state.sheetReducer.data[sheetIndex].dataSheet);
+
   const [tempRow, setTempRow] = useState<number>(row - 1);
   const [tempColumn, setTempColumn] = useState<number>(column - 1);
   const [fileName] = useState<string>('sheet ' + sheetIndex);
@@ -143,24 +147,32 @@ const App: FC = () => {
       const firstColumn: string = firstKey.toString().substring(firstRow.toString().length, firstKey.length);
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const lastRow: number = parseInt(lastKey.match(/^\d+|\d+\b|\d+(?=\w)/g)![0]);
+      console.log(lastKey);
+
       const lastColumn: string = lastKey.toString().substring(lastRow.toString().length, lastKey.length);
       const newData: DataSheet = {};
       for (const item in data) {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const row = parseInt(item.match(/^\d+|\d+\b|\d+(?=\w)/g)![0]);
         const column = item.toString().substring(row.toString().length, item.length);
-        newData[`${row - firstRow + 1}${getColumnName(getColumnIndex(column) - getColumnIndex('A') - 1)}`] = data[item];
+
+        newData[`${row - firstRow + 1}${column}`] = data[item];
       }
+      console.log({ newData });
+
       dispatch(setData(sheetIndex, newData));
       const startRow = lastRow - firstRow === 0 ? 2 : lastRow - firstRow + 1;
+      console.log({ lastRow });
+
       const startCol =
         getColumnIndex(lastColumn) - getColumnIndex(firstColumn) === 0
           ? 2
           : getColumnIndex(lastColumn) - getColumnIndex(firstColumn) + 1;
+      console.log({ startCol });
       if (row !== startRow || column !== startCol) {
-        dispatch(changeRowAndColumn(sheetIndex, { row: startRow, column: startCol }));
-        setTempRow(startRow - 1);
-        setTempColumn(startCol - 1);
+        dispatch(changeRowAndColumn(sheetIndex, { row: startRow + 1, column: startCol + 1 }));
+        setTempRow(startRow);
+        setTempColumn(startCol);
       }
     }
   };
@@ -238,9 +250,17 @@ const App: FC = () => {
         if (!data || Object.keys(data).length === 0) {
           setToastObj({ type: 'error', message: 'Data must not be empty', open: true });
         } else {
-          setToastObj(
-            await saveSheetData(PROJECTERP_DATA_01, userId, 'http://www.ekseli.fi/data', JSON.stringify(data), true)
-          );
+          if (userAction === 0) {
+            setToastObj(
+              await saveSheetData(PROJECTERP_DATA_01, userId, 'http://www.ekseli.fi/data', JSON.stringify(data), false)
+            );
+          } else if (userAction === 2) {
+            setToastObj(
+              await saveSheetData(PROJECTERP_DATA_01, userId, 'http://www.ekseli.fi/data', JSON.stringify(data), true)
+            );
+          } else {
+            setToastObj({ type: 'error', message: 'Something went wrong', open: true });
+          }
         }
       }
     }
@@ -314,7 +334,7 @@ const App: FC = () => {
             </IconButton>
           </Tooltip>
         </SetupContainer>
-        <Title>Spreadsheet - {fileName}</Title>
+        <Title>Spreadsheet - {name === '' ? 1 : name}</Title>
       </Navbar>
       <InputExtensionContainer>
         <IndexInput type="text" value={inputIndex} onChange={inputIndexHandler} />
@@ -323,7 +343,13 @@ const App: FC = () => {
       </InputExtensionContainer>
       <AppContainer>
         <Reset />
-        <Sheet dataJson={dataJson} inputIndex={inputIndex} textInput={textInput} setTextInput={setTextInput} />
+        <Sheet
+          sheetIndex={sheetIndex}
+          dataJson={dataJson}
+          inputIndex={inputIndex}
+          textInput={textInput}
+          setTextInput={setTextInput}
+        />
       </AppContainer>
       <CustomizedSnackbars toastObj={toastObj} />
     </React.Fragment>
