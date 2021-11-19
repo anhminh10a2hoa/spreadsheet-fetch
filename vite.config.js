@@ -1,4 +1,5 @@
 import { defineConfig } from 'vite'
+import tsconfigPaths from 'vite-tsconfig-paths'
 import reactRefresh from '@vitejs/plugin-react-refresh'
 import svgr from 'vite-plugin-svgr'
 import dotenv from "dotenv";
@@ -8,7 +9,7 @@ export default defineConfig({
   build: {
     outDir: 'build',
   },
-  plugins: [reactRefresh(), svgr()],
+  plugins: [reactRefresh(), svgr(), tsconfigPaths()],
   server: {
     port: 8080,
   },

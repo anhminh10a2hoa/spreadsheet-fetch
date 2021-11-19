@@ -20,6 +20,28 @@
     "noImplicitThis": true,
     "noImplicitAny": true,
     "strictNullChecks": true,
+    "baseUrl": ".",
+    "paths": {
+      "@themes": ["src/themes"],
+      "@themes/*": ["src/themes/*"],
+      "@client": ["src/client.ts"],
+      "@components": ["src/components"],
+      "@components/*": ["src/components/*"],
+      "@controllers": ["src/controllers"],
+      "@controllers/*": ["src/controllers/*"],
+      "@hooks": ["src/hooks"],
+      "@hooks/*": ["src/hooks/*"],
+      "@redux": ["src/redux"],
+      "@redux/*": ["src/redux/*"],
+      "@context": ["src/context"],
+      "@context/*": ["src/context/*"],
+      "@utils/*": ["src/utils/*"],
+      "@types": ["src/types"],
+      "@types/*": ["src/types/*"],
+      "@routes": ["src/routes.tsx"],
+      "@enums": ["src/enums"],
+      "@/*": ["src/*"]
+    }
   },
   "include": ["src"] 
 }

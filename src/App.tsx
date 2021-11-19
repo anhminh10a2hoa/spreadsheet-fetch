@@ -1,6 +1,12 @@
 import React, { useState, useRef, useEffect, FC } from 'react';
 import './App.css';
 import { Reset } from 'styled-reset';
+import { useLocation } from 'react-router-dom';
+import Tooltip from '@mui/material/Tooltip';
+import { getColumnIndex, useActiveElement } from '@utils/helper';
+import Sheet from '@components/Sheet';
+import IconButton from '@mui/material/IconButton';
+import { InputEvent, DownloadFileType, DataSheet, IRootState, IToastObject } from '@types';
 import {
   AppContainer,
   InputExtensionContainer,
@@ -21,31 +27,36 @@ import {
   BarrierIcon,
   RowIcon,
   ColumnIcon,
-  GithubIcon
-} from './styles';
-import Tooltip from '@mui/material/Tooltip';
-import { getColumnIndex, getColumnName, useActiveElement } from './utils/helper';
-import Sheet from './components/Sheet';
-import IconButton from '@mui/material/IconButton';
-import { InputEvent, DownloadFileType, DataSheet } from './types/types';
+  GithubIcon,
+  ActionIcon
+} from '@themes';
 import { useDispatch, useSelector } from 'react-redux';
-import { Data } from './redux/sheetReducer';
-import { changeRowAndColumn, setData } from './redux/actions';
+import { changeRowAndColumn, setData, setUserAction, resetSheet } from '@redux/actions';
+import { convertActionToEnumType, decryptUserId } from '@utils/auth';
+import { PROJECTERP_DATA_01, saveSheetData } from '@controllers/RootClassController';
+import CustomizedSnackbars from '@components/alert/CustomizedSnackbars';
 
 const App: FC = () => {
   const dispatch = useDispatch();
-  const sheetIndex = 0;
-  const row = useSelector((state: Data) => state.data[sheetIndex].row);
-  const column = useSelector((state: Data) => state.data[sheetIndex].column);
-  const data = useSelector((state: Data) => state.data[sheetIndex].dataSheet);
+  const url = useLocation().pathname;
+  const name = url.substring(url.lastIndexOf('/') + 1);
+  const sheetIndex = name === '' ? 0 : parseInt(name) - 1;
+
+  const row = useSelector((state: IRootState) => state.sheetReducer.data[sheetIndex].row);
+  const column = useSelector((state: IRootState) => state.sheetReducer.data[sheetIndex].column);
+  const data = useSelector((state: IRootState) => state.sheetReducer.data[sheetIndex].dataSheet);
+
   const [tempRow, setTempRow] = useState<number>(row - 1);
   const [tempColumn, setTempColumn] = useState<number>(column - 1);
-  const [fileName] = useState<string>('sheet 1');
+  const [fileName] = useState<string>('sheet ' + sheetIndex);
   const [dataJson, setDataJson] = useState<DataSheet | null>(null);
   const [inputIndex, setInputIndex] = React.useState<string>('');
   const [textInput, setTextInput] = React.useState<string>('');
-  const getData = useRef<DataSheet>({});
+  const userId = useSelector((state: IRootState) => state.userReducer.userId);
+  const menu = useSelector((state: IRootState) => state.userReducer.menu);
+  const userAction = useSelector((state: IRootState) => state.userReducer.userAction);
   const focusedElement = useActiveElement() as HTMLInputElement | null;
+  const [toastObj, setToastObj] = useState<IToastObject>({ type: '', message: '', open: false });
 
   useEffect(() => {
     if (focusedElement) {
@@ -56,7 +67,39 @@ const App: FC = () => {
     }
   }, [focusedElement]);
 
-  const handleChangerows = (event: InputEvent): void => {
+  useEffect(() => {
+    const searchKey = import.meta.env.VITE_SEARCH_KEY?.toString();
+    const searchQueryArray = window.location.search.split(searchKey + '&');
+    const userIdEncrypted = searchQueryArray.find((item) => item.includes('userId='));
+    const menuQuery = searchQueryArray.find((item) => item.includes('menu='));
+    const actionQuery = searchQueryArray.find((item) => item.includes('action='));
+    let userId, menu, action;
+    if (userIdEncrypted && userIdEncrypted.includes('?userId=')) {
+      userId = userIdEncrypted.replace('?userId=', '');
+    } else if (userIdEncrypted && userIdEncrypted.includes('userId=')) {
+      userId = userIdEncrypted.replace('userId=', '');
+    } else {
+      userId = '';
+    }
+    if (menuQuery && menuQuery.includes('?menu=')) {
+      menu = menuQuery.replace('?menu=', '');
+    } else if (menuQuery && menuQuery.includes('menu=')) {
+      menu = menuQuery.replace('menu=', '');
+    } else {
+      menu = '';
+    }
+    if (actionQuery && actionQuery.includes('?action=')) {
+      action = actionQuery.replace('?action=', '');
+    } else if (actionQuery && actionQuery.includes('action=')) {
+      action = actionQuery.replace('action=', '');
+    } else {
+      action = '';
+    }
+
+    dispatch(setUserAction({ userId: decryptUserId(userId), userAction: convertActionToEnumType(action), menu: menu }));
+  }, []);
+
+  const handleChangeNumberOfRows = (event: InputEvent): void => {
     event.preventDefault();
     const row: number = parseInt(event.target.value);
     setTempRow(row);
@@ -70,7 +113,9 @@ const App: FC = () => {
 
   const submitChange = (): void => {
     if (tempRow < 2 || tempColumn < 2) {
-      alert('Column and Row must be greater than 2');
+      setToastObj({ type: 'error', message: 'Column and Row must be greater than 2', open: true });
+      setTempColumn(column - 1);
+      setTempRow(row - 1);
     } else {
       dispatch(changeRowAndColumn(sheetIndex, { row: tempRow + 1, column: tempColumn + 1 }));
     }
@@ -102,30 +147,39 @@ const App: FC = () => {
       const firstColumn: string = firstKey.toString().substring(firstRow.toString().length, firstKey.length);
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const lastRow: number = parseInt(lastKey.match(/^\d+|\d+\b|\d+(?=\w)/g)![0]);
+      console.log(lastKey);
+
       const lastColumn: string = lastKey.toString().substring(lastRow.toString().length, lastKey.length);
       const newData: DataSheet = {};
       for (const item in data) {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const row = parseInt(item.match(/^\d+|\d+\b|\d+(?=\w)/g)![0]);
         const column = item.toString().substring(row.toString().length, item.length);
-        newData[`${row - firstRow + 1}${getColumnName(getColumnIndex(column) - getColumnIndex('A') - 1)}`] = data[item];
+
+        newData[`${row - firstRow + 1}${column}`] = data[item];
       }
+      console.log({ newData });
+
       dispatch(setData(sheetIndex, newData));
       const startRow = lastRow - firstRow === 0 ? 2 : lastRow - firstRow + 1;
+      console.log({ lastRow });
+
       const startCol =
         getColumnIndex(lastColumn) - getColumnIndex(firstColumn) === 0
           ? 2
           : getColumnIndex(lastColumn) - getColumnIndex(firstColumn) + 1;
+      console.log({ startCol });
       if (row !== startRow || column !== startCol) {
-        dispatch(changeRowAndColumn(sheetIndex, { row: startRow, column: startCol }));
-        setTempRow(startRow - 1);
-        setTempColumn(startCol - 1);
+        dispatch(changeRowAndColumn(sheetIndex, { row: startRow + 1, column: startCol + 1 }));
+        setTempRow(startRow);
+        setTempColumn(startCol);
       }
     }
   };
 
   const resetHandler = (): void => {
-    dispatch(changeRowAndColumn(sheetIndex, { row: 31, column: 31 }));
+    dispatch(resetSheet(sheetIndex));
+    setTextInput('');
     setTempRow(30);
     setTempColumn(30);
   };
@@ -149,7 +203,6 @@ const App: FC = () => {
 
   const exportJsonHandler = (event: React.MouseEvent<any>): void => {
     event.preventDefault();
-    const data: DataSheet = getData.current;
     downloadFile({
       data: JSON.stringify(data),
       fileName: fileName + '.json',
@@ -166,11 +219,11 @@ const App: FC = () => {
           const dataObj = JSON.parse(e.target?.result as string);
           setDataJson(dataObj);
         } else {
-          alert('Something went wrong with the file');
+          setToastObj({ type: 'error', message: 'Something went wrong with the file', open: true });
         }
       };
     } else {
-      alert('Please import JSON file');
+      setToastObj({ type: 'warning', message: 'Please import JSON file', open: true });
     }
   };
 
@@ -186,6 +239,31 @@ const App: FC = () => {
 
   const githubHandler = () => {
     window.open('https://github.com/anhminh10a2hoa/spreadsheet-fetch', '_blank');
+  };
+
+  const actionHandler = async (e: any) => {
+    e.preventDefault();
+    if (PROJECTERP_DATA_01 && typeof PROJECTERP_DATA_01 === 'string') {
+      if (!userId || userId === '') {
+        setToastObj({ type: 'error', message: 'User id not found', open: true });
+      } else {
+        if (!data || Object.keys(data).length === 0) {
+          setToastObj({ type: 'error', message: 'Data must not be empty', open: true });
+        } else {
+          if (userAction === 0) {
+            setToastObj(
+              await saveSheetData(PROJECTERP_DATA_01, userId, 'http://www.ekseli.fi/data', JSON.stringify(data), false)
+            );
+          } else if (userAction === 2) {
+            setToastObj(
+              await saveSheetData(PROJECTERP_DATA_01, userId, 'http://www.ekseli.fi/data', JSON.stringify(data), true)
+            );
+          } else {
+            setToastObj({ type: 'error', message: 'Something went wrong', open: true });
+          }
+        }
+      }
+    }
   };
 
   return (
@@ -230,6 +308,12 @@ const App: FC = () => {
               <GithubIcon onClick={githubHandler} />
             </IconButton>
           </Tooltip>
+
+          <Tooltip title="Action">
+            <IconButton color="inherit">
+              <ActionIcon onClick={actionHandler} />
+            </IconButton>
+          </Tooltip>
         </IconContainer>
         <SetupContainer>
           <Tooltip title="Number of rows: ">
@@ -237,7 +321,7 @@ const App: FC = () => {
               <RowIcon />
             </IconButton>
           </Tooltip>
-          <NumberInput placeholder="Rows" type="number" value={tempRow} onChange={handleChangerows} />
+          <NumberInput placeholder="Rows" type="number" value={tempRow} onChange={handleChangeNumberOfRows} />
           <Tooltip title="Number of columns: ">
             <IconButton color="inherit">
               <ColumnIcon />
@@ -250,7 +334,7 @@ const App: FC = () => {
             </IconButton>
           </Tooltip>
         </SetupContainer>
-        <Title>Spreadsheet - {fileName}</Title>
+        <Title>Spreadsheet - {name === '' ? 1 : name}</Title>
       </Navbar>
       <InputExtensionContainer>
         <IndexInput type="text" value={inputIndex} onChange={inputIndexHandler} />
@@ -259,8 +343,15 @@ const App: FC = () => {
       </InputExtensionContainer>
       <AppContainer>
         <Reset />
-        <Sheet getData={getData} dataJson={dataJson} inputIndex={inputIndex} textInput={textInput} />
+        <Sheet
+          sheetIndex={sheetIndex}
+          dataJson={dataJson}
+          inputIndex={inputIndex}
+          textInput={textInput}
+          setTextInput={setTextInput}
+        />
       </AppContainer>
+      <CustomizedSnackbars toastObj={toastObj} />
     </React.Fragment>
   );
 };

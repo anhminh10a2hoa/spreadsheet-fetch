@@ -1,6 +1,6 @@
 import styled from "styled-components";
-import { AiOutlineSave, AiFillFolderOpen, AiOutlineReload, AiFillPlayCircle, AiFillBulb, AiFillEdit, AiOutlineHolder, AiOutlineInsertRowAbove, AiOutlineInsertRowLeft, AiFillGithub } from "react-icons/ai";
-
+import { AiOutlineSave, AiFillFolderOpen, AiOutlineReload, AiFillPlayCircle, AiFillBulb, AiFillEdit, AiOutlineHolder, AiOutlineInsertRowAbove, AiOutlineInsertRowLeft, AiFillGithub, AiOutlineCode } from "react-icons/ai";
+import { NavLink } from "react-router-dom";
 interface SheetProps {
   numberOfColumns: number;
 }
@@ -45,7 +45,7 @@ export const Button = styled.button`
 export const Navbar = styled.div`
   padding: 35px;
   text-align: center;
-  background: #1d7545;
+  background: #0b4f70;
   color: white;
   font-size: 30px;
 
@@ -90,6 +90,11 @@ export const SimpleIcon = styled(AiFillBulb)`
   cursor: pointer;
 `
 
+export const ActionIcon = styled(AiOutlineCode)`
+  font-size: 1.5rem;
+  cursor: pointer;
+`
+
 export const EditFileName = styled(AiFillEdit)`
   font-size: 1.5rem;
   cursor: pointer;
@@ -113,7 +118,7 @@ export const InputWrapper = styled.div`
 export const NumberInput = styled.input`
   margin: 7px;
   width: 80px;
-  border: 1px solid #d4d4d4;
+  border: 1px solid #4B89D1;
   :focus {
     border: 1px solid #4B89D1;
     outline: none;
@@ -152,7 +157,7 @@ export const Input = styled.input`
 export const AppContainer = styled.div`
   max-width: 100vw;
   overflow: auto;
-  height: calc(100vh - 133px);
+  height: calc(100vh - 181px);
 `
 
 export const InputExtensionContainer = styled.div`
@@ -181,6 +186,38 @@ export const IndexInput = styled.input`
   }
 `
 
+export const BottomNavBar = styled.div`
+  background-color: #333;
+  overflow: hidden;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  &.active{
+    background-color: #ddd;
+    color: black;
+  }
+`
+
+export const SheetLink = styled(NavLink)`
+  float: left;
+  display: block;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+  :hover,.active,:active {
+    background-color: #ddd;
+    color: black;
+  }
+  &.${props => props.activeClassName} {
+    background-color: #ddd;
+    color: black;
+  }
+}
+
+`
+
 export const BarrierIcon = styled(AiOutlineHolder)`
   font-size: 1.5rem;
   cursor: pointer;
@@ -204,3 +241,4 @@ export const GithubIcon = styled(AiFillGithub)`
   font-size: 1.5rem;
   cursor: pointer;
 `
+

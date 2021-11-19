@@ -1,4 +1,9 @@
-import { createStore } from 'redux';
+import { createStore, combineReducers } from 'redux';
 import { sheetReducer } from './sheetReducer';
+import { userReducer } from './userReducer';
+import { IRootState } from '@types';
 
-export const store = createStore(sheetReducer);
+
+const reducers = combineReducers({ sheetReducer, userReducer });
+
+export const store = createStore(reducers);
